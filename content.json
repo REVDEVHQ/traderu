@@ -29,6 +29,40 @@
     "traderUTikTok": "https://www.tiktok.com/@chepeex_",
     "traderUInstagram": "https://www.instagram.com/chepeex/"
   },
+
+  "trackedWallets": [
+    {
+      "trackedWalletAddress": "2fg5QD1eD7rzNNCsvnhmXFm5hqNgwTTG8p7kQ6f3rx6f",
+      "name": "cupsey",
+      "emoji": "😀",
+      "alertsOn": true
+    },
+    {
+      "trackedWalletAddress": "PMJA8UQDyWTFw2Smhyp9jGA6aTaP7jKHR7BPudrgyYN",
+      "name": "cchesta",
+      "emoji": "🥪",
+      "alertsOn": true
+    },
+    {
+      "trackedWalletAddress": "DNfuF1L62WWyW3pNakVkyGGFzVVhj4Yr52jSmdTyeBHm",
+      "name": "gakey",
+      "emoji": "🏙️",
+      "alertsOn": true
+    },
+    {
+      "trackedWalletAddress": "DuQabFqdC9eeBULVa7TTdZYxe8vK8ct5DZr4Xcf7docy",
+      "name": "Orangie",
+      "emoji": "😀",
+      "alertsOn": true
+    },
+    {
+      "trackedWalletAddress": "CyaE1VxvBrahnPWkqm5VsdCvyS2QmNht2UFrKJHga54o",
+      "name": "cented",
+      "emoji": "🍪",
+      "alertsOn": true
+    }
+  ],
+
   "onboarding": {
     "title": "BEGINNER ONBOARDING (READ FIRST)",
     "platformStack": {
