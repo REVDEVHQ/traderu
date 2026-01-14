@@ -6,452 +6,117 @@
     <title>TRADER U SUPER BOT</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --bg: #0a0a0a;
-            --panel-bg: #111;
-            --border: #333;
-            --text: #fff;
-            --text-dim: #aaa;
-            --accent: #ff9500;
-            --accent-hover: #ffaa33;
-            --green: #00ff00;
-            --red: #ff3333;
-        }
-        
-        body {
-            font-family: 'Roboto Mono', monospace;
-            background: var(--bg);
-            color: var(--text);
-            overflow: hidden;
-        }
-        
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(
-                to bottom,
-                rgba(255,255,255,0.02),
-                rgba(255,255,255,0.02) 1px,
-                transparent 1px,
-                transparent 3px
-            );
-            opacity: 0.08;
-            pointer-events: none;
-            z-index: 9999;
-        }
-        
+        :root { --bg: #0a0a0a; --panel-bg: #111; --border: #333; --text: #fff; --text-dim: #aaa; --accent: #ff9500; --accent-hover: #ffaa33; --green: #00ff00; --red: #ff3333; }
+        body { font-family: 'Roboto Mono', monospace; background: var(--bg); color: var(--text); overflow: hidden; }
+        body::before { content: ""; position: fixed; inset: 0; background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px); opacity: 0.08; pointer-events: none; z-index: 9999; }
         .screen-flash { position: fixed; inset: 0; background: var(--accent); opacity: 0; pointer-events: none; z-index: 9998; }
         .screen-flash.active { animation: screenFlash 0.3s ease-out; }
         @keyframes screenFlash { 0%, 100% { opacity: 0; } 50% { opacity: 0.12; } }
-        
-        @keyframes glitchHover {
-            0% { text-shadow: 2px 0 var(--accent), -2px 0 cyan; }
-            25% { text-shadow: -2px 0 var(--accent), 2px 0 cyan; }
-            50% { text-shadow: 2px 0 cyan, -2px 0 var(--accent); }
-            75% { text-shadow: -2px 0 cyan, 2px 0 var(--accent); }
-            100% { text-shadow: 0 0 var(--accent); }
-        }
-        
-        #welcome-screen {
-            position: fixed; inset: 0; background: #000;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 10000; transition: opacity 0.5s ease;
-        }
+        @keyframes glitchHover { 0% { text-shadow: 2px 0 var(--accent), -2px 0 cyan; } 25% { text-shadow: -2px 0 var(--accent), 2px 0 cyan; } 50% { text-shadow: 2px 0 cyan, -2px 0 var(--accent); } 75% { text-shadow: -2px 0 cyan, 2px 0 var(--accent); } 100% { text-shadow: 0 0 var(--accent); } }
+        #welcome-screen { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; transition: opacity 0.5s ease; }
         #welcome-screen.hidden { opacity: 0; pointer-events: none; }
-        
         .welcome-logo { font-size: 3.5rem; font-weight: 700; color: var(--accent); margin-bottom: 10px; letter-spacing: 8px; }
         .welcome-subtitle { font-size: 1.1rem; color: #666; margin-bottom: 40px; letter-spacing: 3px; }
-        
         .loading-bar { width: 400px; height: 4px; background: #222; margin-bottom: 30px; overflow: hidden; }
         .loading-progress { height: 100%; background: var(--accent); width: 0%; animation: loadProgress 2s ease-out forwards; }
         @keyframes loadProgress { to { width: 100%; } }
-        
-        .enter-btn {
-            padding: 15px 50px; background: transparent;
-            border: 2px solid var(--accent); color: var(--accent);
-            font-family: inherit; font-size: 1rem; font-weight: 700;
-            cursor: pointer; letter-spacing: 3px;
-            opacity: 0; animation: fadeInBtn 0.5s ease 2s forwards;
-            transition: all 0.3s;
-        }
+        .enter-btn { padding: 15px 50px; background: transparent; border: 2px solid var(--accent); color: var(--accent); font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: 3px; opacity: 0; animation: fadeInBtn 0.5s ease 2s forwards; transition: all 0.3s; }
         @keyframes fadeInBtn { to { opacity: 1; } }
         .enter-btn:hover { background: var(--accent); color: #000; }
-        
-        #terminal-container {
-            display: grid;
-            grid-template-columns: 380px 1fr 420px;
-            grid-template-rows: 60px calc(100vh - 90px);
-            height: 100vh;
-            gap: 0;
-        }
-        
-        #top-bar {
-            grid-column: 1 / -1;
-            background: var(--panel-bg);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 25px;
-            border-bottom: 2px solid var(--border);
-        }
-        
-        .terminal-title {
-            font-size: 1.3rem; font-weight: 700;
-            color: var(--accent);
-            letter-spacing: 5px;
-            cursor: pointer;
-        }
+        #terminal-container { display: grid; grid-template-columns: 380px 1fr 420px; grid-template-rows: 60px calc(100vh - 90px); height: 100vh; gap: 0; }
+        #top-bar { grid-column: 1 / -1; background: var(--panel-bg); display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 2px solid var(--border); }
+        .terminal-title { font-size: 1.3rem; font-weight: 700; color: var(--accent); letter-spacing: 5px; cursor: pointer; }
         .terminal-title:hover { animation: glitchHover 0.5s ease; }
-        
         .top-right { display: flex; align-items: center; gap: 20px; }
-        
         .social-links { display: flex; gap: 15px; align-items: center; }
-        .social-links a {
-            font-size: 1.4rem; font-weight: 900;
-            transition: all 0.3s; text-decoration: none;
-            font-family: 'Roboto Mono', monospace;
-        }
+        .social-links a { font-size: 1.4rem; font-weight: 900; transition: all 0.3s; text-decoration: none; font-family: 'Roboto Mono', monospace; }
         .social-links a:hover { transform: scale(1.3); }
         .social-links a.youtube { color: #FF0000; }
         .social-links a.tiktok { color: #00f2ea; }
-        .social-links a.instagram {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
+        .social-links a.instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .theme-switcher { display: flex; gap: 8px; }
-        .theme-btn {
-            width: 28px; height: 28px;
-            border: 2px solid #333;
-            cursor: pointer; transition: all 0.3s;
-            position: relative;
-        }
+        .theme-btn { width: 28px; height: 28px; border: 2px solid #333; cursor: pointer; transition: all 0.3s; }
         .theme-btn:hover { transform: scale(1.15); border-color: var(--text); }
         .theme-btn.active { border-color: var(--text); box-shadow: 0 0 10px currentColor; }
-        
         .status-indicator { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: #888; }
         .status-dot { width: 10px; height: 10px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        
-        /* Left Panel */
-        #left-panel {
-            background: var(--panel-bg);
-            display: flex; flex-direction: column;
-            border-right: 2px solid var(--border);
-            overflow: hidden;
-        }
-        .panel-header {
-            padding: 12px 20px;
-            background: #0a0a0a;
-            border-bottom: 2px solid var(--border);
-            font-size: 0.75rem; font-weight: 700;
-            color: #888; letter-spacing: 2px;
-            flex-shrink: 0;
-        }
-        #command-output {
-            flex: 1;
-            overflow-y: auto; overflow-x: hidden;
-            padding: 20px;
-            font-size: 0.85rem; line-height: 2;
-            min-height: 0;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
-            touch-action: pan-y;
-        }
+        .neural-node { position: absolute; width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.5rem; font-weight: 700; cursor: grab; transition: box-shadow 0.3s; background: rgba(255, 149, 0, 0.15); box-shadow: 0 0 20px rgba(255, 149, 0, 0.4); text-align: center; line-height: 1.1; color: #fff; z-index: 10; user-select: none; }
+        .neural-node.dragging { cursor: grabbing; z-index: 1000; box-shadow: 0 0 40px var(--accent); }
+        .neural-node.core { width: 70px; height: 70px; font-size: 0.6rem; background: rgba(255, 149, 0, 0.25); box-shadow: 0 0 30px rgba(255, 149, 0, 0.6); }
+        .neural-node:hover { box-shadow: 0 0 35px var(--accent); }
+        .neural-node.active { animation: nodePulse 2s ease-in-out infinite; }
+        @keyframes nodePulse { 0%, 100% { box-shadow: 0 0 20px rgba(255, 149, 0, 0.4); } 50% { box-shadow: 0 0 40px var(--accent); } }
+        .synapse { position: absolute; height: 1.5px; background: var(--accent); transform-origin: left center; opacity: 0.4; box-shadow: 0 0 8px var(--accent); z-index: 1; }
+        .synapse.firing { animation: synapseFire 1.5s ease-in-out infinite; }
+        .synapse.core-connection { height: 2px; opacity: 0.6; box-shadow: 0 0 12px var(--accent); }
+        @keyframes synapseFire { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; height: 2.5px; } }
+        .neural-stats { position: absolute; bottom: 15px; left: 15px; right: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; z-index: 5; }
+        .neural-stat { padding: 10px 12px; background: rgba(255, 149, 0, 0.15); border: 2px solid rgba(255, 149, 0, 0.5); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ccc; backdrop-filter: blur(5px); }
+        .stat-value { color: var(--accent); font-size: 1rem; display: block; margin-top: 5px; }
+        #left-panel { background: var(--panel-bg); display: flex; flex-direction: column; border-right: 2px solid var(--border); overflow: hidden; }
+        .panel-header { padding: 12px 20px; background: #0a0a0a; border-bottom: 2px solid var(--border); font-size: 0.75rem; font-weight: 700; color: #888; letter-spacing: 2px; flex-shrink: 0; }
+        #command-output { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 20px; font-size: 0.85rem; line-height: 2; min-height: 0; -webkit-overflow-scrolling: touch; }
         #command-output::-webkit-scrollbar { width: 8px; }
         #command-output::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        
         .cmd-line { margin-bottom: 10px; opacity: 0; animation: slideIn 0.4s ease forwards; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .cmd-prompt { color: var(--accent); font-weight: 700; }
         .cmd-text { color: #bbb; }
         .cmd-success { color: var(--green); font-weight: 700; text-shadow: 0 0 10px var(--green); }
         .cmd-warning { color: #ffaa00; font-weight: 700; text-shadow: 0 0 10px rgba(255, 170, 0, 0.5); }
-        
-        #command-input-area {
-            padding: 15px 20px;
-            background: #0a0a0a;
-            border-top: 2px solid var(--border);
-            display: flex; gap: 10px;
-            flex-shrink: 0;
-        }
-        #command-input {
-            flex: 1;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            padding: 10px;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 0.85rem;
-        }
+        #command-input-area { padding: 15px 20px; background: #0a0a0a; border-top: 2px solid var(--border); display: flex; gap: 10px; flex-shrink: 0; }
+        #command-input { flex: 1; background: #1a1a1a; border: 1px solid #333; padding: 10px; color: var(--text); font-family: inherit; font-size: 0.85rem; }
         #command-input:focus { outline: none; border-color: var(--accent); }
-        
-        /* Center Panel */
         #center-panel { background: var(--panel-bg); position: relative; overflow: hidden; }
-        #neural-network { touch-action: none; }
-        .neural-label {
-            position: absolute; top: 20px; left: 50%;
-            transform: translateX(-50%);
-            padding: 8px 20px;
-            background: rgba(255, 149, 0, 0.2);
-            border: 2px solid var(--accent);
-            font-size: 0.75rem; font-weight: 700;
-            letter-spacing: 3px;
-            z-index: 10;
-        }
-        
-        .neural-node {
-            position: absolute;
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            border: 2px solid var(--accent);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.5rem; font-weight: 700;
-            cursor: grab;
-            transition: box-shadow 0.3s, transform 0.2s;
-            background: rgba(255, 149, 0, 0.15);
-            box-shadow: 0 0 20px rgba(255, 149, 0, 0.4);
-            text-align: center;
-            line-height: 1.1;
-            color: #fff;
-            z-index: 10;
-            user-select: none;
-        }
-        .neural-node.dragging { cursor: grabbing; z-index: 1000; box-shadow: 0 0 40px var(--accent); }
-        .neural-node.core {
-            width: 70px; height: 70px;
-            font-size: 0.6rem;
-            background: rgba(255, 149, 0, 0.25);
-            box-shadow: 0 0 30px rgba(255, 149, 0, 0.6);
-        }
-        .neural-node:hover { transform: scale(1.15); z-index: 100; box-shadow: 0 0 35px var(--accent); }
-        .neural-node.active { animation: nodePulse 2s ease-in-out infinite; }
-        @keyframes nodePulse { 0%, 100% { box-shadow: 0 0 20px rgba(255, 149, 0, 0.4); } 50% { box-shadow: 0 0 40px var(--accent); } }
-        
-        .synapse {
-            position: absolute;
-            height: 1.5px;
-            background: var(--accent);
-            transform-origin: left center;
-            opacity: 0.4;
-            box-shadow: 0 0 8px var(--accent);
-            z-index: 1;
-        }
-        .synapse.firing { animation: synapseFire 1.5s ease-in-out infinite; }
-        .synapse.core-connection { height: 2px; opacity: 0.6; box-shadow: 0 0 12px var(--accent); }
-        @keyframes synapseFire { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; height: 2.5px; } }
-        
-        .neural-stats {
-            position: absolute;
-            bottom: 15px; left: 15px; right: 15px;
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            z-index: 5;
-        }
-        .neural-stat {
-            padding: 10px 12px;
-            background: rgba(255, 149, 0, 0.15);
-            border: 2px solid rgba(255, 149, 0, 0.5);
-            font-size: 0.65rem; font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #ccc;
-            backdrop-filter: blur(5px);
-        }
-        .stat-value { color: var(--accent); font-size: 1rem; display: block; margin-top: 5px; }
-        
-        /* Right Panel */
-        #right-panel {
-            background: var(--panel-bg);
-            display: flex; flex-direction: column;
-            border-left: 2px solid var(--border);
-            overflow: hidden;
-        }
-        #bot-chat {
-            flex: 1;
-            overflow-y: auto; overflow-x: hidden;
-            padding: 20px;
-            display: flex; flex-direction: column;
-            gap: 15px;
-            min-height: 0;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
-            touch-action: pan-y;
-        }
+        .neural-label { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); padding: 8px 20px; background: rgba(255, 149, 0, 0.2); border: 2px solid var(--accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; z-index: 10; }
+        #right-panel { background: var(--panel-bg); display: flex; flex-direction: column; border-left: 2px solid var(--border); overflow: hidden; }
+        #bot-chat { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 20px; display: flex; flex-direction: column; gap: 15px; min-height: 0; -webkit-overflow-scrolling: touch; }
         #bot-chat::-webkit-scrollbar { width: 8px; }
         #bot-chat::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        
-        .bot-message {
-            padding: 15px;
-            background: #1a1a1a;
-            border-left: 4px solid var(--accent);
-            font-size: 0.9rem;
-            line-height: 1.8;
-            animation: slideIn 0.3s ease;
-            white-space: normal;
-            word-break: break-word;
-        }
+        .bot-message { padding: 15px; background: #1a1a1a; border-left: 4px solid var(--accent); font-size: 0.9rem; line-height: 1.8; animation: slideIn 0.3s ease; }
+        .bot-message img { max-width: 100%; margin: 15px 0; border: 2px solid var(--accent); border-radius: 4px; }
         .bot-message strong { color: var(--accent); }
-        
-        /* Image rendering in bot messages */
-        .bot-message img {
-            display: block;
-            max-width: 100%;
-            width: 100%;
-            height: auto;
-            margin: 12px 0;
-            border: 2px solid var(--accent);
-            border-radius: 6px;
-            background: #0b0b0b;
-        }
-        .img-caption {
-            font-size: 0.75rem;
-            color: #999;
-            margin-top: -6px;
-            margin-bottom: 10px;
-        }
-        .img-error {
-            margin: 10px 0;
-            padding: 10px 12px;
-            border: 1px solid #444;
-            color: #bbb;
-            background: rgba(255,255,255,0.03);
-            font-size: 0.75rem;
-        }
-        
         .message-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
-        .action-btn {
-            padding: 8px 15px;
-            background: transparent;
-            border: 1px solid #555;
-            color: #aaa;
-            font-family: inherit;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+        .action-btn { padding: 8px 15px; background: transparent; border: 1px solid #555; color: #aaa; font-family: inherit; font-size: 0.75rem; cursor: pointer; transition: all 0.3s; }
         .action-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(255, 149, 0, 0.1); }
-        
         #bot-input-area { padding: 15px 20px; background: #0a0a0a; border-top: 2px solid var(--border); flex-shrink: 0; }
-        #bot-input {
-            width: 100%;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            padding: 12px;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-        }
+        #bot-input { width: 100%; background: #1a1a1a; border: 1px solid #333; padding: 12px; color: var(--text); font-family: inherit; font-size: 0.85rem; margin-bottom: 10px; }
         #bot-input:focus { outline: none; border-color: var(--accent); }
-        #bot-send {
-            width: 100%;
-            padding: 12px;
-            background: var(--accent);
-            border: none;
-            color: #000;
-            font-family: inherit;
-            font-size: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
+        #bot-send { width: 100%; padding: 12px; background: var(--accent); border: none; color: #000; font-family: inherit; font-size: 0.85rem; font-weight: 700; cursor: pointer; letter-spacing: 1px; transition: all 0.3s; }
         #bot-send:hover { background: var(--accent-hover); }
-        
-        .data-feed {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            padding: 10px 20px;
-            background: #0a0a0a;
-            border-top: 2px solid var(--border);
-            font-size: 0.75rem;
-            display: flex;
-            justify-content: space-around;
-            z-index: 9997;
-        }
+        .data-feed { position: fixed; bottom: 0; left: 0; right: 0; padding: 10px 20px; background: #0a0a0a; border-top: 2px solid var(--border); font-size: 0.75rem; display: flex; justify-content: space-around; z-index: 9997; }
         .feed-item { display: flex; gap: 8px; }
         .feed-label { color: #666; }
         .feed-value { color: var(--green); font-weight: 700; }
-        
+        .waiting-indicator { text-align: center; padding: 40px 20px; color: #555; font-size: 0.9rem; }
+        .waiting-indicator .hint { margin-top: 10px; font-size: 0.75rem; color: #444; }
         #mobile-tabs { display: none; }
-        
         @media (max-width: 768px) {
-            :root {
-                --mobile-topbar: 60px;
-                --mobile-tabs: 50px;
-                --mobile-feed: 55px;
-            }
+            :root { --mobile-topbar: 60px; --mobile-tabs: 50px; --mobile-feed: 50px; }
             body { padding-bottom: env(safe-area-inset-bottom); }
-            
-            #terminal-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: var(--mobile-topbar) var(--mobile-tabs) 1fr;
-                height: 100vh;
-                overflow: hidden;
-            }
-            #mobile-tabs {
-                display: flex;
-                grid-column: 1 / -1;
-                align-items: center;
-                justify-content: space-around;
-                gap: 8px;
-                padding: 10px;
-                background: #0a0a0a;
-                border-bottom: 2px solid var(--border);
-                z-index: 9996;
-            }
-            .mobile-tab {
-                flex: 1;
-                padding: 12px 8px;
-                background: transparent;
-                border: 1px solid #333;
-                color: #bbb;
-                font-family: inherit;
-                font-size: 0.75rem;
-                font-weight: 700;
-                letter-spacing: 2px;
-                cursor: pointer;
-                transition: all 0.2s ease;
-            }
-            .mobile-tab.active {
-                border-color: var(--accent);
-                color: var(--accent);
-                background: rgba(255, 149, 0, 0.1);
-            }
-            
-            #left-panel, #right-panel, #center-panel {
-                grid-column: 1 / -1;
-                border: none;
-                height: calc(100vh - var(--mobile-topbar) - var(--mobile-tabs) - var(--mobile-feed));
-                overflow: hidden;
-                min-height: 0;
-                position: relative;
-            }
+            #terminal-container { grid-template-columns: 1fr; grid-template-rows: var(--mobile-topbar) var(--mobile-tabs) 1fr; height: 100vh; overflow: hidden; }
+            #mobile-tabs { display: flex; grid-column: 1 / -1; align-items: center; justify-content: space-around; gap: 8px; padding: 10px; background: #0a0a0a; border-bottom: 2px solid var(--border); z-index: 9996; }
+            .mobile-tab { flex: 1; padding: 12px 8px; background: transparent; border: 1px solid #333; color: #bbb; font-family: inherit; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; cursor: pointer; }
+            .mobile-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(255, 149, 0, 0.1); }
+            #left-panel, #right-panel, #center-panel { grid-column: 1 / -1; border: none; height: calc(100vh - var(--mobile-topbar) - var(--mobile-tabs) - var(--mobile-feed)); overflow: hidden; min-height: 0; }
             #left-panel, #right-panel { display: none; }
             #left-panel.active, #right-panel.active { display: flex; flex-direction: column; }
             #center-panel { display: none; }
             #center-panel.active { display: block; }
-            
-            #command-input, #bot-input { font-size: 16px; }
-            
-            .data-feed {
-                height: var(--mobile-feed);
-                font-size: 0.65rem;
-                padding: 8px 10px;
-                padding-bottom: max(8px, env(safe-area-inset-bottom));
-                flex-wrap: nowrap;
-                gap: 8px;
-                overflow-x: auto;
-                display: flex;
-                align-items: center;
-            }
-            .feed-item { flex-shrink: 0; }
+            .panel-header { flex-shrink: 0; padding: 10px 15px; font-size: 0.7rem; }
+            #command-output, #bot-chat { flex: 1; overflow-y: auto; padding: 15px; min-height: 0; }
+            #command-input, #bot-input { font-size: 16px; padding: 12px; }
+            #bot-send { padding: 14px; font-size: 16px; }
+            .neural-node { width: 45px; height: 45px; font-size: 0.45rem; }
+            .neural-node.core { width: 60px; height: 60px; font-size: 0.5rem; }
+            .neural-stats { gap: 8px; bottom: 10px; left: 10px; right: 10px; }
+            .neural-stat { font-size: 0.6rem; padding: 8px 10px; }
+            .stat-value { font-size: 0.85rem; }
+            .neural-label { font-size: 0.65rem; padding: 6px 12px; top: 10px; }
             .terminal-title { font-size: 0.9rem; letter-spacing: 3px; }
+            .data-feed { height: var(--mobile-feed); font-size: 0.65rem; padding: 8px 10px; }
         }
     </style>
 </head>
@@ -462,45 +127,35 @@
         <div class="loading-bar"><div class="loading-progress"></div></div>
         <button class="enter-btn" onclick="enterTerminal()">ENTER SYSTEM</button>
     </div>
-
     <div id="terminal-container" style="opacity: 0;">
         <div class="screen-flash" id="screen-flash"></div>
-        
         <div id="top-bar">
             <div class="terminal-title">TRADER U SUPER BOT</div>
             <div class="top-right">
-                <div class="social-links" id="social-links">
-                    <a href="#" target="_blank" title="YouTube" class="youtube" id="yt-link">Y</a>
-                    <a href="#" target="_blank" title="TikTok" class="tiktok" id="tt-link">T</a>
-                    <a href="#" target="_blank" title="Instagram" class="instagram" id="ig-link">I</a>
+                <div class="social-links">
+                    <a href="#" target="_blank" class="youtube" id="yt-link">Y</a>
+                    <a href="#" target="_blank" class="tiktok" id="tt-link">T</a>
+                    <a href="#" target="_blank" class="instagram" id="ig-link">I</a>
                 </div>
                 <div class="theme-switcher">
-                    <div class="theme-btn active" style="background: #ff9500;" onclick="changeTheme('#ff9500', this)" title="Orange"></div>
-                    <div class="theme-btn" style="background: #00ff00;" onclick="changeTheme('#00ff00', this)" title="Green"></div>
-                    <div class="theme-btn" style="background: #00aaff;" onclick="changeTheme('#00aaff', this)" title="Blue"></div>
-                    <div class="theme-btn" style="background: #ff00ff;" onclick="changeTheme('#ff00ff', this)" title="Purple"></div>
+                    <div class="theme-btn active" style="background: #ff9500;" onclick="changeTheme('#ff9500', this)"></div>
+                    <div class="theme-btn" style="background: #00ff00;" onclick="changeTheme('#00ff00', this)"></div>
+                    <div class="theme-btn" style="background: #00aaff;" onclick="changeTheme('#00aaff', this)"></div>
+                    <div class="theme-btn" style="background: #ff00ff;" onclick="changeTheme('#ff00ff', this)"></div>
                 </div>
-                <div class="status-indicator">
-                    <div class="status-dot"></div>
-                    <span>LIVE</span>
-                </div>
+                <div class="status-indicator"><div class="status-dot"></div><span>LIVE</span></div>
             </div>
         </div>
-
         <div id="mobile-tabs">
             <button class="mobile-tab" data-view="terminal">TERMINAL</button>
             <button class="mobile-tab active" data-view="brain">BRAIN</button>
             <button class="mobile-tab" data-view="bot">BOT</button>
         </div>
-
         <div id="left-panel">
             <div class="panel-header">EDUCATION TERMINAL</div>
             <div id="command-output"></div>
-            <div id="command-input-area">
-                <input type="text" id="command-input" placeholder="Type 'help' for commands...">
-            </div>
+            <div id="command-input-area"><input type="text" id="command-input" placeholder="Type 'help' for commands..."></div>
         </div>
-
         <div id="center-panel">
             <div class="neural-label">TRADER U NEURAL NETWORK</div>
             <div id="neural-network" style="width: 100%; height: 100%; position: relative;"></div>
@@ -511,17 +166,15 @@
                 <div class="neural-stat">Status<span class="stat-value" id="status-text">LOADING</span></div>
             </div>
         </div>
-
         <div id="right-panel">
             <div class="panel-header">TRADER U BOT</div>
             <div id="bot-chat"></div>
             <div id="bot-input-area">
-                <input type="text" id="bot-input" placeholder="Ask me anything about trading...">
+                <input type="text" id="bot-input" placeholder="Say hello to start...">
                 <button id="bot-send">SEND</button>
             </div>
         </div>
     </div>
-
     <div class="data-feed" style="opacity: 0;" id="data-feed">
         <div class="feed-item"><span class="feed-label">BTC:</span><span class="feed-value">$95,284</span></div>
         <div class="feed-item"><span class="feed-label">ETH:</span><span class="feed-value">$3,421</span></div>
@@ -530,180 +183,120 @@
         <div class="feed-item"><span class="feed-label">24H VOL:</span><span class="feed-value">$127B</span></div>
     </div>
 
-    <script>
-        // ============================================
-        // CONTENT URLS
-        // ============================================
-        const CONTENT_URL = './content.json';
-        const MEDIA_LIBRARY_URL = './mediaLibrary.json';
-
-        // ============================================
-        // LOADED CONTENT
-        // ============================================
-        let facts = {};
+    <script type="module">
+        // ========================================
+        // IMPORT ENGINE FROM engine.js
+        // ========================================
+        import { createEngine } from './engine.js';
+        
+        // ========================================
+        // GLOBAL STATE
+        // ========================================
+        let engine = null;
         let knowledgeBase = {};
-        let mediaLibrary = {}; // id -> url
-        let education = { quotes: [], tips: [], warnings: [], checklist: [] };
-
-        function absUrl(base, maybeRelative) {
+        let facts = {};
+        let education = {};
+        let mediaLibrary = [];
+        
+        // ========================================
+        // LOAD ALL JSON FILES
+        // ========================================
+        async function loadAllContent() {
             try {
-                const baseAbs = new URL(base, window.location.href);
-                return new URL(maybeRelative, baseAbs).href;
-            } catch (_) {
-                return maybeRelative; // fallback
-            }
-        }
-
-        function resolveImageRef(ref) {
-            // Supports:
-            // - "some/path.png"
-            // - "idFromMediaLibrary"
-            // - {src:"...", caption:"..."}
-            if (!ref) return { src: null, caption: "" };
-
-            if (typeof ref === 'object') {
-                const raw = ref.src || ref.url || ref.id || '';
-                const caption = ref.caption || '';
-                const mapped = mediaLibrary[raw] || raw;
-                const resolved = mapped ? absUrl(CONTENT_URL, mapped) : null;
-                return { src: resolved, caption };
-            }
-
-            if (typeof ref === 'string') {
-                const mapped = mediaLibrary[ref] || ref;
-                const resolved = absUrl(CONTENT_URL, mapped);
-                return { src: resolved, caption: "" };
-            }
-
-            return { src: null, caption: "" };
-        }
-
-        async function fetchJsonSafe(url) {
-            const r = await fetch(url, { cache: 'no-store' });
-            if (!r.ok) throw new Error(`Fetch failed: ${url} (${r.status})`);
-            return r.json();
-        }
-
-        async function loadContent() {
-            try {
-                const [contentRes, mediaRes] = await Promise.allSettled([
-                    fetchJsonSafe(CONTENT_URL),
-                    fetchJsonSafe(MEDIA_LIBRARY_URL)
+                const [content, media, engineConfig] = await Promise.all([
+                    fetch('./content.json').then(r => r.json()),
+                    fetch('./mediaLibrary.json').then(r => r.json()),
+                    fetch('./engine.config.json').then(r => r.json())
                 ]);
-
-                if (contentRes.status === 'rejected') throw contentRes.reason;
-
-                const data = contentRes.value;
-
-                if (data.facts) facts = data.facts;
-                if (data.knowledge) knowledgeBase = data.knowledge;
-                if (data.education) education = data.education;
-
-                if (mediaRes.status === 'fulfilled') {
-                    // mediaLibrary.json can be { "id":"path" } OR { "items": {..} }
-                    const m = mediaRes.value;
-                    mediaLibrary = m.items ? m.items : m;
-                } else {
-                    mediaLibrary = {};
-                }
-
+                
+                facts = content.facts || {};
+                education = content.education || {};
+                mediaLibrary = media.mediaLibrary?.items || [];
+                
+                knowledgeBase = {
+                    ...content,
+                    mediaLibrary: mediaLibrary,
+                    engineConfig: engineConfig
+                };
+                
+                engine = createEngine(knowledgeBase);
+                
                 updateUIWithContent();
-
                 document.getElementById('status-text').textContent = 'ONLINE';
-                document.getElementById('doc-count').textContent = Object.keys(knowledgeBase).length;
-
-                console.log('✅ Content loaded:', { docs: Object.keys(knowledgeBase).length, media: Object.keys(mediaLibrary).length });
+                document.getElementById('doc-count').textContent = Object.keys(content.knowledge || {}).length;
+                console.log('✅ Engine loaded');
                 return true;
             } catch (error) {
-                console.error('❌ Failed to load content:', error);
-                document.getElementById('status-text').textContent = 'OFFLINE';
+                console.error('❌ Load failed:', error);
+                document.getElementById('status-text').textContent = 'ERROR';
                 return false;
             }
         }
-
+        
         function updateUIWithContent() {
             if (facts.traderUYoutube) document.getElementById('yt-link').href = facts.traderUYoutube;
             if (facts.traderUTikTok) document.getElementById('tt-link').href = facts.traderUTikTok;
             if (facts.traderUInstagram) document.getElementById('ig-link').href = facts.traderUInstagram;
         }
 
-        function enterTerminal() {
+        // ========================================
+        // ENTER TERMINAL
+        // ========================================
+        window.enterTerminal = async function() {
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('terminal-container').style.opacity = '1';
             document.getElementById('terminal-container').style.transition = 'opacity 0.5s ease';
             document.getElementById('data-feed').style.opacity = '1';
-            document.getElementById('data-feed').style.transition = 'opacity 0.5s ease 0.3s';
-
+            
             setTimeout(async () => {
-                await loadContent();
+                await loadAllContent();
                 initTerminal();
                 initNeuralNetwork();
                 initBotChat();
                 initMobileTabs();
             }, 500);
-        }
-
-        function triggerFlash() {
-            const flash = document.getElementById('screen-flash');
-            flash.classList.add('active');
-            setTimeout(() => flash.classList.remove('active'), 300);
-        }
-
-        function changeTheme(color, element) {
+        };
+        
+        window.changeTheme = function(color, element) {
             document.documentElement.style.setProperty('--accent', color);
-            document.documentElement.style.setProperty('--accent-hover', color);
-
             document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
             if (element) element.classList.add('active');
-        }
+        };
 
-        // Mobile tabs
+        // ========================================
+        // MOBILE TABS
+        // ========================================
         function initMobileTabs() {
             const tabs = document.getElementById('mobile-tabs');
-            if (!tabs) return;
-
             const leftPanel = document.getElementById('left-panel');
             const centerPanel = document.getElementById('center-panel');
             const rightPanel = document.getElementById('right-panel');
-            const commandInput = document.getElementById('command-input');
-            const botInput = document.getElementById('bot-input');
-
+            
             centerPanel.classList.add('active');
-
+            
             tabs.addEventListener('click', (e) => {
                 const btn = e.target.closest('.mobile-tab');
                 if (!btn) return;
-
                 const view = btn.dataset.view;
-
+                
                 document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
                 leftPanel.classList.remove('active');
                 centerPanel.classList.remove('active');
                 rightPanel.classList.remove('active');
-
                 btn.classList.add('active');
-
-                if (view === 'terminal') {
-                    leftPanel.classList.add('active');
-                    setTimeout(() => commandInput.focus(), 100);
-                }
-                if (view === 'brain') {
-                    centerPanel.classList.add('active');
-                }
-                if (view === 'bot') {
-                    rightPanel.classList.add('active');
-                    setTimeout(() => {
-                        botInput.focus();
-                        botChat.scrollTop = botChat.scrollHeight;
-                    }, 100);
-                }
+                
+                if (view === 'terminal') leftPanel.classList.add('active');
+                if (view === 'brain') centerPanel.classList.add('active');
+                if (view === 'bot') rightPanel.classList.add('active');
             });
         }
 
-        // Terminal
+        // ========================================
+        // TERMINAL
+        // ========================================
         const commandOutput = document.getElementById('command-output');
         const commandInput = document.getElementById('command-input');
-
+        
         function addCmd(text, type = '') {
             const line = document.createElement('div');
             line.className = `cmd-line ${type}`;
@@ -711,44 +304,12 @@
             commandOutput.appendChild(line);
             commandOutput.scrollTop = commandOutput.scrollHeight;
         }
-
-        function initTerminal() {
-            const docCount = Object.keys(knowledgeBase).length;
-            addCmd('<span class="cmd-prompt">TRADER U></span> <span class="cmd-text">System initialized</span>');
-            addCmd(`<span class="cmd-prompt">TRADER U></span> <span class="cmd-success">Knowledge base loaded: ${docCount} docs</span>`);
-            addCmd('<span class="cmd-prompt">TRADER U></span> <span class="cmd-text">Type "help" for commands</span>');
-
-            function fireContent() {
-                const rand = Math.random();
-
-                if (rand < 0.25 && education.quotes.length > 0) {
-                    const quote = education.quotes[Math.floor(Math.random() * education.quotes.length)];
-                    addCmd('<span class="cmd-text">' + quote + '</span>');
-                } else if (rand < 0.5 && education.tips.length > 0) {
-                    const tip = education.tips[Math.floor(Math.random() * education.tips.length)];
-                    addCmd('<span class="cmd-success">' + tip + '</span>');
-                } else if (rand < 0.7 && education.warnings.length > 0) {
-                    const warning = education.warnings[Math.floor(Math.random() * education.warnings.length)];
-                    addCmd('<span class="cmd-warning">' + warning + '</span>');
-                } else if (education.checklist.length > 0) {
-                    addCmd('<span class="cmd-text">📋 PRE-TRADE CHECKLIST:</span>');
-                    education.checklist.forEach(item => {
-                        addCmd('<span class="cmd-text">   □ ' + item + '</span>');
-                    });
-                }
-
-                setTimeout(fireContent, 6000 + Math.random() * 6000);
-            }
-
-            setTimeout(fireContent, 3000);
-        }
-
+        
         const commands = {
             help: () => {
                 addCmd('<span class="cmd-success">AVAILABLE COMMANDS:</span>');
-                Object.keys(knowledgeBase).forEach(key => {
-                    const doc = knowledgeBase[key];
-                    addCmd(`<span class="cmd-text">  ${key} - ${doc.title}</span>`);
+                Object.keys(knowledgeBase.knowledge || {}).forEach(key => {
+                    addCmd(`<span class="cmd-text">  ${key} - ${knowledgeBase.knowledge[key].title}</span>`);
                 });
                 addCmd('<span class="cmd-text">  clear - Clear terminal</span>');
             },
@@ -757,45 +318,222 @@
                 addCmd('<span class="cmd-prompt">TRADER U></span> <span class="cmd-text">Terminal cleared</span>');
             }
         };
-
+        
         function setupCommands() {
-            Object.keys(knowledgeBase).forEach(key => {
-                commands[key] = () => showInBot(key);
+            Object.keys(knowledgeBase.knowledge || {}).forEach(key => {
+                commands[key] = () => { addCmd(`<span class="cmd-success">✓ Displaying "${key}" in bot</span>`); displayBotMessage(key); };
             });
-
-            commands.lp = () => showInBot('liquidity');
-            commands.links = () => showInBot('referrals');
-            commands.axiom = () => showInBot('referrals');
+            commands.lp = () => commands.liquidity?.();
+            commands.links = () => commands.referrals?.();
         }
-
-        function showInBot(key) {
-            addCmd(`<span class="cmd-success">✓ Displaying "${key}" in bot chat</span>`);
-            displayBotMessage(key);
+        
+        function initTerminal() {
+            setupCommands();
+            const docCount = Object.keys(knowledgeBase.knowledge || {}).length;
+            addCmd('<span class="cmd-prompt">TRADER U></span> <span class="cmd-text">System initialized</span>');
+            addCmd(`<span class="cmd-prompt">TRADER U></span> <span class="cmd-success">Knowledge base: ${docCount} docs</span>`);
+            addCmd('<span class="cmd-prompt">TRADER U></span> <span class="cmd-text">Type "help" for commands</span>');
+            
+            function fireContent() {
+                const rand = Math.random();
+                if (rand < 0.25 && education.quotes?.length) {
+                    addCmd('<span class="cmd-text">' + education.quotes[Math.floor(Math.random() * education.quotes.length)] + '</span>');
+                } else if (rand < 0.5 && education.tips?.length) {
+                    addCmd('<span class="cmd-success">' + education.tips[Math.floor(Math.random() * education.tips.length)] + '</span>');
+                } else if (rand < 0.7 && education.warnings?.length) {
+                    addCmd('<span class="cmd-warning">' + education.warnings[Math.floor(Math.random() * education.warnings.length)] + '</span>');
+                } else if (education.checklist?.length) {
+                    addCmd('<span class="cmd-text">📋 PRE-TRADE CHECKLIST:</span>');
+                    education.checklist.forEach(item => addCmd('<span class="cmd-text">   □ ' + item + '</span>'));
+                }
+                setTimeout(fireContent, 6000 + Math.random() * 6000);
+            }
+            setTimeout(fireContent, 3000);
         }
-
+        
         commandInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 const cmd = commandInput.value.trim().toLowerCase();
                 if (cmd) {
                     addCmd(`<span class="cmd-prompt">TRADER U></span> ${cmd}`);
-                    if (commands[cmd]) {
-                        commands[cmd]();
-                    } else {
-                        addCmd('<span class="cmd-warning">Command not found. Type "help"</span>');
-                    }
+                    if (commands[cmd]) commands[cmd]();
+                    else addCmd('<span class="cmd-warning">Command not found. Type "help"</span>');
                 }
                 commandInput.value = '';
             }
         });
 
-        // Bot chat
-        const botChat = document.getElementById('bot-chat');
+        // ========================================
+        // NEURAL NETWORK
+        // ========================================
+        function initNeuralNetwork() {
+            const neuralArea = document.getElementById('neural-network');
+            function getAreaDimensions() {
+                const rect = neuralArea.getBoundingClientRect();
+                return { width: rect.width, height: rect.height - 140, centerX: rect.width / 2, centerY: (rect.height - 140) / 2 };
+            }
+            let dims = getAreaDimensions();
+            const nodes = [];
+            let isDragging = false, draggedNode = null, dragOffset = { x: 0, y: 0 };
+            function getRadiusScale() { return Math.min(dims.width, dims.height) / 600; }
+            
+            const coreLabels = ['ANALYSIS', 'MEMORY', 'DECISION'];
+            for (let i = 0; i < 3; i++) {
+                const angle = (i / 3) * Math.PI * 2 - Math.PI / 2;
+                const radius = 80 * getRadiusScale();
+                const x = Math.cos(angle) * radius + dims.centerX;
+                const y = Math.sin(angle) * radius + dims.centerY;
+                const node = document.createElement('div');
+                node.className = 'neural-node core active';
+                node.style.left = (x - 35) + 'px';
+                node.style.top = (y - 35) + 'px';
+                node.textContent = coreLabels[i];
+                neuralArea.appendChild(node);
+                nodes.push({ element: node, x, y, angle, radius, layer: 'core', baseRadius: 80 });
+            }
+            
+            const innerLabels = ['RUG DETECT', 'RISK MGT', 'CHART', 'VOLUME', 'WALLET', 'FILTER', 'ENTRY', 'EXIT'];
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2 - Math.PI / 2;
+                const radius = 160 * getRadiusScale();
+                const x = Math.cos(angle) * radius + dims.centerX;
+                const y = Math.sin(angle) * radius + dims.centerY;
+                const node = document.createElement('div');
+                node.className = 'neural-node';
+                if (i % 2 === 0) node.classList.add('active');
+                node.style.left = (x - 25) + 'px';
+                node.style.top = (y - 25) + 'px';
+                node.textContent = innerLabels[i];
+                neuralArea.appendChild(node);
+                nodes.push({ element: node, x, y, angle, radius, layer: 'inner', baseRadius: 160 });
+            }
+            
+            const outerLabels = ['SIGNAL', 'PATTERN', 'SENTIMENT', 'LIQUIDITY', 'TIMING', 'NARRATIVE', 'EXECUTE', 'LEARN'];
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const radius = 240 * getRadiusScale();
+                const x = Math.cos(angle) * radius + dims.centerX;
+                const y = Math.sin(angle) * radius + dims.centerY;
+                const node = document.createElement('div');
+                node.className = 'neural-node';
+                if (i % 3 === 0) node.classList.add('active');
+                node.style.left = (x - 25) + 'px';
+                node.style.top = (y - 25) + 'px';
+                node.textContent = outerLabels[i];
+                neuralArea.appendChild(node);
+                nodes.push({ element: node, x, y, angle, radius, layer: 'outer', baseRadius: 240 });
+            }
+            
+            nodes.forEach((node) => {
+                node.element.addEventListener('mousedown', startDrag);
+                node.element.addEventListener('touchstart', startDrag);
+                function startDrag(e) {
+                    e.preventDefault();
+                    isDragging = true;
+                    draggedNode = node;
+                    const touch = e.touches ? e.touches[0] : e;
+                    const rect = node.element.getBoundingClientRect();
+                    dragOffset.x = touch.clientX - rect.left - rect.width / 2;
+                    dragOffset.y = touch.clientY - rect.top - rect.height / 2;
+                    node.element.classList.add('dragging');
+                }
+            });
+            
+            function handleMove(e) {
+                if (isDragging && draggedNode) {
+                    if (e.cancelable) e.preventDefault();
+                    const touch = e.touches ? e.touches[0] : e;
+                    const rect = neuralArea.getBoundingClientRect();
+                    draggedNode.x = touch.clientX - rect.left - dragOffset.x;
+                    draggedNode.y = touch.clientY - rect.top - dragOffset.y;
+                    const size = draggedNode.layer === 'core' ? 35 : 25;
+                    draggedNode.element.style.left = (draggedNode.x - size) + 'px';
+                    draggedNode.element.style.top = (draggedNode.y - size) + 'px';
+                    updateSynapses();
+                }
+            }
+            function handleEnd() {
+                if (draggedNode) draggedNode.element.classList.remove('dragging');
+                isDragging = false;
+                draggedNode = null;
+            }
+            neuralArea.addEventListener('mousemove', handleMove);
+            neuralArea.addEventListener('touchmove', handleMove, { passive: false });
+            document.addEventListener('mouseup', handleEnd);
+            document.addEventListener('touchend', handleEnd);
+            
+            const synapses = [];
+            function makeSynapse(a, b, isCore = false) {
+                const syn = document.createElement('div');
+                syn.className = isCore ? 'synapse core-connection' : 'synapse';
+                if (Math.random() > 0.6) syn.classList.add('firing');
+                neuralArea.insertBefore(syn, neuralArea.firstChild);
+                synapses.push({ el: syn, a, b });
+            }
+            for (let i = 0; i < 3; i++) makeSynapse(i, (i + 1) % 3, true);
+            for (let i = 0; i < 3; i++) for (let j = 3; j < 11; j += 2) makeSynapse(i, j, true);
+            for (let i = 3; i < 11; i++) { makeSynapse(i, 3 + ((i - 3 + 1) % 8)); if (i % 2 === 0) makeSynapse(i, 3 + ((i - 3 + 2) % 8)); }
+            for (let i = 3; i < 11; i++) makeSynapse(i, 11 + (i - 3));
+            for (let i = 11; i < 19; i++) makeSynapse(i, 11 + ((i - 11 + 1) % 8));
+            makeSynapse(3, 15); makeSynapse(5, 17); makeSynapse(7, 13); makeSynapse(9, 18);
+            document.getElementById('synapse-count').textContent = synapses.length;
+            
+            function updateSynapses() {
+                synapses.forEach(s => {
+                    const n1 = nodes[s.a], n2 = nodes[s.b];
+                    const dx = n2.x - n1.x, dy = n2.y - n1.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    const ang = Math.atan2(dy, dx);
+                    s.el.style.width = dist + 'px';
+                    s.el.style.left = n1.x + 'px';
+                    s.el.style.top = n1.y + 'px';
+                    s.el.style.transform = `rotate(${ang}rad)`;
+                });
+            }
+            
+            function animateNodes() {
+                if (!isDragging) {
+                    dims = getAreaDimensions();
+                    const scale = getRadiusScale();
+                    nodes.forEach(node => {
+                        if (node.layer !== 'core') node.angle += (node.layer === 'inner' ? 0.0015 : 0.001);
+                        node.radius = node.baseRadius * scale;
+                        node.x = Math.cos(node.angle) * node.radius + dims.centerX;
+                        node.y = Math.sin(node.angle) * node.radius + dims.centerY;
+                        const size = node.layer === 'core' ? 35 : 25;
+                        node.element.style.left = (node.x - size) + 'px';
+                        node.element.style.top = (node.y - size) + 'px';
+                    });
+                }
+                updateSynapses();
+                requestAnimationFrame(animateNodes);
+            }
+            animateNodes();
+            
+            setInterval(() => {
+                if (Math.random() > 0.5) {
+                    for (let i = 0; i < 5 + Math.floor(Math.random() * 8); i++) {
+                        const idx = Math.floor(Math.random() * synapses.length);
+                        synapses[idx].el.classList.add('firing');
+                        setTimeout(() => synapses[idx].el.classList.remove('firing'), 1500);
+                    }
+                }
+            }, 2000);
+            
+            window.addEventListener('resize', () => { dims = getAreaDimensions(); });
+        }
 
+        // ========================================
+        // BOT CHAT - WIRED TO ENGINE
+        // ========================================
+        const botChat = document.getElementById('bot-chat');
+        const botInput = document.getElementById('bot-input');
+        const botSend = document.getElementById('bot-send');
+        
         function addBotMessage(html, actions = []) {
             const msg = document.createElement('div');
             msg.className = 'bot-message';
             msg.innerHTML = html;
-
             if (actions.length > 0) {
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'message-actions';
@@ -808,422 +546,123 @@
                 });
                 msg.appendChild(actionsDiv);
             }
-
             botChat.appendChild(msg);
             botChat.scrollTop = botChat.scrollHeight;
         }
-
-        function buildImagesHtml(doc) {
-            const images = Array.isArray(doc.images) ? doc.images : [];
-            if (!images.length) return '';
-
-            let out = '';
-            images.forEach((ref) => {
-                const { src, caption } = resolveImageRef(ref);
-                if (!src) return;
-
-                // Use <img> with onerror fallback to show the actual broken URL
-                out += `
-                    <img src="${src}" alt="Guide" onerror="
-                        this.outerHTML = '<div class=&quot;img-error&quot;>IMAGE FAILED TO LOAD:<br><span style=&quot;color: var(--accent);&quot;>${src.replace(/'/g,'&#39;')}</span><br><br>Fix: confirm the file exists + path matches your repo.</div>';
-                    ">
-                `;
-                if (caption) out += `<div class="img-caption">${caption}</div>`;
-            });
-
-            return out;
+        
+        function addUserMessage(text) {
+            const msg = document.createElement('div');
+            msg.className = 'bot-message';
+            msg.style.borderLeftColor = '#00ff00';
+            msg.textContent = text;
+            botChat.appendChild(msg);
+            botChat.scrollTop = botChat.scrollHeight;
         }
-
+        
+        function showWaitingState() {
+            const w = document.createElement('div');
+            w.className = 'waiting-indicator';
+            w.id = 'waiting-state';
+            w.innerHTML = '👋 Say <strong style="color: var(--accent);">hello</strong> to wake me up<div class="hint">Or ask a question with "?" to get started</div>';
+            botChat.appendChild(w);
+        }
+        
+        function removeWaitingState() {
+            const w = document.getElementById('waiting-state');
+            if (w) w.remove();
+        }
+        
         function displayBotMessage(key) {
-            const doc = knowledgeBase[key];
+            removeWaitingState();
+            const doc = knowledgeBase.knowledge?.[key];
             if (!doc) return;
-
-            let html = `<strong>${doc.title}</strong><br><br>${String(doc.content || '').replace(/\n/g, '<br>')}`;
-
-            // Insert referral links if this is the referrals doc
+            let html = `<strong>${doc.title}</strong><br><br>${doc.content.replace(/\n/g, '<br>')}`;
             if (key === 'referrals' && facts.axiomReferral) {
-                html = html.replace(
-                    'Best for beginners',
-                    `<a href="${facts.axiomReferral}" target="_blank" style="color: var(--accent);">${facts.axiomReferral}</a><br>Best for beginners`
-                );
-                if (facts.novaReferral) {
-                    html = html.replace(
-                        '25% fee cashback',
-                        `<a href="${facts.novaReferral}" target="_blank" style="color: var(--accent);">${facts.novaReferral}</a><br>25% fee cashback`
-                    );
-                }
-                if (facts.padreReferral) {
-                    html = html.replace(
-                        'Advanced terminal',
-                        `<a href="${facts.padreReferral}" target="_blank" style="color: var(--accent);">${facts.padreReferral}</a><br>Advanced terminal`
-                    );
-                }
+                html = html.replace('Best for beginners', `<a href="${facts.axiomReferral}" target="_blank" style="color: var(--accent);">${facts.axiomReferral}</a><br>Best for beginners`);
+                html = html.replace('25% fee cashback', `<a href="${facts.novaReferral}" target="_blank" style="color: var(--accent);">${facts.novaReferral}</a><br>25% fee cashback`);
+                html = html.replace('Advanced terminal', `<a href="${facts.padreReferral}" target="_blank" style="color: var(--accent);">${facts.padreReferral}</a><br>Advanced terminal`);
             }
-
-            // ✅ Images appended here (fixed)
-            html += buildImagesHtml(doc);
-
+            const relatedMedia = mediaLibrary.filter(m => m.relatedKnowledgeKeys?.some(k => k.includes(key)));
+            relatedMedia.forEach(m => { if (m.url) html += `<br><img src="${m.url}" alt="${m.title}">`; });
+            if (doc.images?.length) doc.images.forEach(img => { html += `<br><img src="${img}" alt="Guide">`; });
             addBotMessage(html, doc.actions || []);
         }
-
+        
         function handleAction(action) {
             const map = {
-                'Good coin signs': 'goodcoin',
-                'Good coin checklist': 'goodcoin',
-                'Good coins': 'goodcoin',
-                'Rug detection': 'rugpull',
-                'Rug signs': 'rugpull',
-                'Spot rugs': 'rugpull',
-                'Risk management': 'risk',
-                'Risk mgmt': 'risk',
-                'Risk rules': 'risk',
-                'Show filters': 'filters',
-                'Filters': 'filters',
-                'Entry tips': 'workflow',
-                'Workflow': 'workflow',
-                'Study trades': 'risk',
-                'CA explanation': 'ca',
-                'Settings': 'settings',
-                'Bundle detection': 'bundles',
-                'Volume check': 'volume',
-                'Liquidity': 'liquidity',
-                'LP locks': 'liquidity',
-                'Platform links': 'referrals',
-                'Referrals': 'referrals'
+                'Good coin signs': 'goodcoin', 'Good coins': 'goodcoin',
+                'Rug detection': 'rugpull', 'Rug signs': 'rugpull',
+                'Risk management': 'risk', 'Risk mgmt': 'risk', 'Risk rules': 'risk',
+                'Show filters': 'filters', 'Filters': 'filters',
+                'Entry tips': 'workflow', 'Workflow': 'workflow',
+                'Study trades': 'risk', 'Settings': 'settings',
+                'Bundle detection': 'bundles', 'Volume check': 'volume',
+                'Liquidity': 'liquidity', 'LP locks': 'liquidity',
+                'Platform links': 'referrals', 'Referrals': 'referrals'
             };
-
             const key = map[action];
-            if (key && knowledgeBase[key]) {
-                displayBotMessage(key);
-
-                setTimeout(() => {
-                    const messages = botChat.querySelectorAll('.bot-message');
-                    const lastMsg = messages[messages.length - 1];
-                    if (lastMsg) lastMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
-            }
+            if (key && knowledgeBase.knowledge?.[key]) displayBotMessage(key);
         }
-
+        
         function initBotChat() {
-            setupCommands();
-
-            const welcome = `🎓 <strong>Welcome to TRADER U!</strong><br><br>
-            A community of dedicated traders learning together.<br><br>
-            I have complete meme coin trading knowledge + platform links. What do you want to learn?`;
-
-            addBotMessage(welcome, ['Rug detection', 'Liquidity', 'Platform links']);
+            showWaitingState();
         }
-
-        const botInput = document.getElementById('bot-input');
-        const botSend = document.getElementById('bot-send');
-
+        
+        // ========================================
+        // SEND MESSAGE - WIRED TO ENGINE
+        // ========================================
         function sendBotQuery() {
             const query = botInput.value.trim();
             if (!query) return;
-
-            const userMsg = document.createElement('div');
-            userMsg.className = 'bot-message';
-            userMsg.style.borderLeftColor = '#00ff00';
-            userMsg.style.alignSelf = 'flex-end';
-            userMsg.style.maxWidth = '85%';
-            userMsg.textContent = query;
-            botChat.appendChild(userMsg);
-
-            setTimeout(() => userMsg.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-
             botInput.value = '';
-
-            setTimeout(() => {
-                const lower = query.toLowerCase();
-                let foundKey = null;
-
-                for (const key in knowledgeBase) {
-                    if (lower.includes(key) || (knowledgeBase[key].title && lower.includes(knowledgeBase[key].title.toLowerCase()))) {
-                        foundKey = key;
-                        break;
-                    }
-                }
-
-                if (!foundKey) {
-                    if (lower.includes('rug')) foundKey = 'rugpull';
-                    else if (lower.includes('good') || lower.includes('find')) foundKey = 'goodcoin';
-                    else if (lower.includes('risk') || lower.includes('stop')) foundKey = 'risk';
-                    else if (lower.includes('filter')) foundKey = 'filters';
-                    else if (lower.includes('ape') || lower.includes('scan') || lower.includes('watch')) foundKey = 'workflow';
-                    else if (lower.includes('ca') || lower.includes('contract')) foundKey = 'ca';
-                    else if (lower.includes('setting') || lower.includes('buy') || lower.includes('sell')) foundKey = 'settings';
-                    else if (lower.includes('bundle')) foundKey = 'bundles';
-                    else if (lower.includes('volume')) foundKey = 'volume';
-                    else if (lower.includes('liq') || lower.includes('lp') || lower.includes('lock')) foundKey = 'liquidity';
-                    else if (lower.includes('refer') || lower.includes('link') || lower.includes('axiom') || lower.includes('nova')) foundKey = 'referrals';
-                }
-
-                if (foundKey && knowledgeBase[foundKey]) {
-                    displayBotMessage(foundKey);
-                } else {
-                    let response = `I can help with that! Available topics:<br><br>`;
-                    Object.keys(knowledgeBase).forEach(key => {
-                        response += `• <strong>${knowledgeBase[key].title}</strong><br>`;
-                    });
-                    response += `<br>Or type a command in terminal!`;
-
-                    addBotMessage(response, ['Rug detection', 'Risk rules', 'Liquidity']);
-                }
-            }, 500);
+            addUserMessage(query);
+            
+            if (!engine) {
+                addBotMessage('⏳ Engine loading...');
+                return;
+            }
+            
+            const response = engine.onMessage(query);
+            
+            // null = stay silent (not greeted yet)
+            if (response === null) return;
+            
+            removeWaitingState();
+            addBotMessage(response.replace(/\n/g, '<br>'), ['Rug detection', 'Risk rules', 'Platform links']);
+            
+            if (engine.getState().greeted) {
+                botInput.placeholder = 'Ask me anything about trading...';
+            }
         }
-
+        
         botSend.addEventListener('click', sendBotQuery);
         botInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendBotQuery(); });
 
-        // Neural Network (unchanged)
-        function initNeuralNetwork() {
-            const neuralArea = document.getElementById('neural-network');
-
-            function getAreaDimensions() {
-                const rect = neuralArea.getBoundingClientRect();
-                return { width: rect.width, height: rect.height - 140, centerX: rect.width / 2, centerY: (rect.height - 140) / 2 };
-            }
-
-            let dims = getAreaDimensions();
-            const nodes = [];
-            let draggedNode = null;
-            let isDragging = false;
-            let dragOffset = { x: 0, y: 0 };
-
-            function getRadiusScale() { return Math.min(dims.width, dims.height) / 600; }
-
-            const coreLabels = ['ANALYSIS', 'MEMORY', 'DECISION'];
-            for (let i = 0; i < 3; i++) {
-                const angle = (i / 3) * Math.PI * 2 - Math.PI / 2;
-                const radius = 80 * getRadiusScale();
-                const x = Math.cos(angle) * radius + dims.centerX;
-                const y = Math.sin(angle) * radius + dims.centerY;
-
-                const node = document.createElement('div');
-                node.className = 'neural-node core active';
-                node.style.left = (x - 35) + 'px';
-                node.style.top = (y - 35) + 'px';
-                node.textContent = coreLabels[i];
-
-                neuralArea.appendChild(node);
-                nodes.push({ element: node, x, y, angle, radius, layer: 'core', isDraggable: true, baseRadius: 80 });
-            }
-
-            const innerLabels = ['RUG DETECT', 'RISK MGT', 'CHART', 'VOLUME', 'WALLET', 'FILTER', 'ENTRY', 'EXIT'];
-            for (let i = 0; i < 8; i++) {
-                const angle = (i / 8) * Math.PI * 2 - Math.PI / 2;
-                const radius = 160 * getRadiusScale();
-                const x = Math.cos(angle) * radius + dims.centerX;
-                const y = Math.sin(angle) * radius + dims.centerY;
-
-                const node = document.createElement('div');
-                node.className = 'neural-node';
-                if (i % 2 === 0) node.classList.add('active');
-                node.style.left = (x - 25) + 'px';
-                node.style.top = (y - 25) + 'px';
-                node.textContent = innerLabels[i];
-
-                neuralArea.appendChild(node);
-                nodes.push({ element: node, x, y, angle, radius, layer: 'inner', isDraggable: true, baseRadius: 160 });
-            }
-
-            const outerLabels = ['SIGNAL', 'PATTERN', 'SENTIMENT', 'LIQUIDITY', 'TIMING', 'NARRATIVE', 'EXECUTE', 'LEARN'];
-            for (let i = 0; i < 8; i++) {
-                const angle = (i / 8) * Math.PI * 2;
-                const radius = 240 * getRadiusScale();
-                const x = Math.cos(angle) * radius + dims.centerX;
-                const y = Math.sin(angle) * radius + dims.centerY;
-
-                const node = document.createElement('div');
-                node.className = 'neural-node';
-                if (i % 3 === 0) node.classList.add('active');
-                node.style.left = (x - 25) + 'px';
-                node.style.top = (y - 25) + 'px';
-                node.textContent = outerLabels[i];
-
-                neuralArea.appendChild(node);
-                nodes.push({ element: node, x, y, angle, radius, layer: 'outer', isDraggable: true, baseRadius: 240 });
-            }
-
-            nodes.forEach((node, index) => {
-                node.element.addEventListener('mousedown', startDrag);
-                node.element.addEventListener('touchstart', startDrag);
-
-                function startDrag(e) {
-                    e.preventDefault();
-                    isDragging = true;
-                    draggedNode = { node, index };
-
-                    const touch = e.touches ? e.touches[0] : e;
-                    const rect = node.element.getBoundingClientRect();
-
-                    dragOffset.x = touch.clientX - rect.left - rect.width / 2;
-                    dragOffset.y = touch.clientY - rect.top - rect.height / 2;
-
-                    node.element.classList.add('dragging');
-                }
-            });
-
-            function handleMove(e) {
-                if (isDragging && draggedNode) {
-                    if (e.cancelable) e.preventDefault();
-
-                    const touch = e.touches ? e.touches[0] : e;
-                    const rect = neuralArea.getBoundingClientRect();
-                    const newX = touch.clientX - rect.left - dragOffset.x;
-                    const newY = touch.clientY - rect.top - dragOffset.y;
-
-                    draggedNode.node.x = newX;
-                    draggedNode.node.y = newY;
-
-                    const size = draggedNode.node.layer === 'core' ? 35 : 25;
-                    draggedNode.node.element.style.left = (newX - size) + 'px';
-                    draggedNode.node.element.style.top = (newY - size) + 'px';
-
-                    updateSynapses();
-                }
-            }
-
-            function handleEnd() {
-                if (isDragging && draggedNode) {
-                    draggedNode.node.element.classList.remove('dragging');
-                    isDragging = false;
-                    draggedNode = null;
-                }
-            }
-
-            neuralArea.addEventListener('mousemove', handleMove);
-            neuralArea.addEventListener('touchmove', handleMove, { passive: false });
-            document.addEventListener('mouseup', handleEnd);
-            document.addEventListener('touchend', handleEnd);
-
-            const synapses = [];
-
-            function makeSynapse(a, b, isCore = false) {
-                const syn = document.createElement('div');
-                syn.className = isCore ? 'synapse core-connection' : 'synapse';
-                if (Math.random() > 0.6) syn.classList.add('firing');
-                neuralArea.insertBefore(syn, neuralArea.firstChild);
-                synapses.push({ el: syn, a, b });
-            }
-
-            for (let i = 0; i < 3; i++) makeSynapse(i, (i + 1) % 3, true);
-            for (let i = 0; i < 3; i++) for (let j = 3; j < 11; j += 2) makeSynapse(i, j, true);
-            for (let i = 3; i < 11; i++) {
-                makeSynapse(i, 3 + ((i - 3 + 1) % 8));
-                if (i % 2 === 0) makeSynapse(i, 3 + ((i - 3 + 2) % 8));
-            }
-            for (let i = 3; i < 11; i++) {
-                const outerIdx = 11 + (i - 3);
-                makeSynapse(i, outerIdx);
-            }
-            for (let i = 11; i < 19; i++) makeSynapse(i, 11 + ((i - 11 + 1) % 8));
-
-            makeSynapse(3, 15);
-            makeSynapse(5, 17);
-            makeSynapse(7, 13);
-            makeSynapse(9, 18);
-
-            document.getElementById('synapse-count').textContent = synapses.length;
-
-            function updateSynapses() {
-                synapses.forEach(s => {
-                    const n1 = nodes[s.a];
-                    const n2 = nodes[s.b];
-                    const dx = n2.x - n1.x;
-                    const dy = n2.y - n1.y;
-                    const dist = Math.sqrt(dx*dx + dy*dy);
-                    const ang = Math.atan2(dy, dx);
-                    s.el.style.width = dist + 'px';
-                    s.el.style.left = n1.x + 'px';
-                    s.el.style.top = n1.y + 'px';
-                    s.el.style.transform = `rotate(${ang}rad)`;
-                });
-            }
-
-            function animateNodes() {
-                if (!isDragging) {
-                    dims = getAreaDimensions();
-                    const scale = getRadiusScale();
-
-                    nodes.forEach((node) => {
-                        if (node.layer !== 'core') {
-                            node.angle += (node.layer === 'inner' ? 0.0015 : 0.001);
-                            node.radius = node.baseRadius * scale;
-                            const x = Math.cos(node.angle) * node.radius + dims.centerX;
-                            const y = Math.sin(node.angle) * node.radius + dims.centerY;
-                            node.element.style.left = (x - 25) + 'px';
-                            node.element.style.top = (y - 25) + 'px';
-                            node.x = x;
-                            node.y = y;
-                        } else {
-                            node.radius = node.baseRadius * scale;
-                            const x = Math.cos(node.angle) * node.radius + dims.centerX;
-                            const y = Math.sin(node.angle) * node.radius + dims.centerY;
-                            node.element.style.left = (x - 35) + 'px';
-                            node.element.style.top = (y - 35) + 'px';
-                            node.x = x;
-                            node.y = y;
-                        }
-                    });
-                }
-
-                updateSynapses();
-                requestAnimationFrame(animateNodes);
-            }
-
-            animateNodes();
-
-            setInterval(() => {
-                if (Math.random() > 0.5) {
-                    const count = 5 + Math.floor(Math.random() * 8);
-                    for (let i = 0; i < count; i++) {
-                        const idx = Math.floor(Math.random() * synapses.length);
-                        synapses[idx].el.classList.add('firing');
-                        setTimeout(() => synapses[idx].el.classList.remove('firing'), 1500);
-                    }
-                }
-            }, 2000);
-
-            window.addEventListener('resize', () => { dims = getAreaDimensions(); });
-        }
-
-        // Data feed
+        // ========================================
+        // DATA FEED
+        // ========================================
         function updateDataFeed() {
             const feeds = [
-                { label: 'BTC', base: 95284, variance: 500 },
-                { label: 'ETH', base: 3421, variance: 50 },
-                { label: 'SOL', base: 147, variance: 5 },
-                { label: 'MCAP', base: 3.2, variance: 0.1, suffix: 'T' },
-                { label: '24H VOL', base: 127, variance: 5, suffix: 'B' }
+                { base: 95284, variance: 500 },
+                { base: 3421, variance: 50 },
+                { base: 147, variance: 5 },
+                { base: 3.2, variance: 0.1, suffix: 'T' },
+                { base: 127, variance: 5, suffix: 'B' }
             ];
-
-            const feedItems = document.querySelectorAll('.feed-item');
-
-            feeds.forEach((feed, idx) => {
-                const item = feedItems[idx];
-                if (!item) return;
-
+            document.querySelectorAll('.feed-item').forEach((item, idx) => {
+                const feed = feeds[idx];
+                if (!feed) return;
                 const change = (Math.random() - 0.5) * feed.variance * 2;
                 const newValue = feed.base + change;
-                const formatted = feed.suffix
-                    ? `$${newValue.toFixed(1)}${feed.suffix}`
-                    : `$${Math.floor(newValue).toLocaleString()}`;
-
+                const formatted = feed.suffix ? `$${newValue.toFixed(1)}${feed.suffix}` : `$${Math.floor(newValue).toLocaleString()}`;
                 const valueSpan = item.querySelector('.feed-value');
                 if (valueSpan) {
-                    valueSpan.style.transition = 'none';
                     valueSpan.style.color = change > 0 ? '#00ff00' : '#ff3333';
                     valueSpan.textContent = formatted;
-
-                    setTimeout(() => {
-                        valueSpan.style.transition = 'color 0.5s ease';
-                        valueSpan.style.color = '#00ff00';
-                    }, 100);
+                    setTimeout(() => { valueSpan.style.color = '#00ff00'; }, 500);
                 }
             });
         }
-
         setInterval(updateDataFeed, 2000 + Math.random() * 2000);
     </script>
 </body>
