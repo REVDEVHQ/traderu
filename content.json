@@ -1,0 +1,111 @@
+{
+  "facts": {
+    "axiomReferral": "https://axiom.trade/@plmedia",
+    "novaReferral": "https://nova.trade/ref/TRADERU",
+    "padreReferral": "https://trade.padre.gg/rk/unethicaldev",
+    "traderUYoutube": "https://www.youtube.com/@Chepetrades",
+    "traderUTikTok": "https://www.tiktok.com/@chepeex_",
+    "traderUInstagram": "https://www.instagram.com/chepeex/"
+  },
+  "knowledge": {
+    "liquidity": {
+      "title": "LIQUIDITY & LP LOCK (EXIT SAFETY)",
+      "content": "💧 **LIQUIDITY (LP) = THE EXIT**\n\nLiquidity is the pool you trade against. If it's weak or controlled, you can get TRAPPED.\n\n✅ **WHAT GOOD LIQUIDITY LOOKS LIKE:**\n1. **Enough LP for your size** - Buy/sell without massive price impact\n2. **Steady volume** - Real buys + sells, not one-sided\n3. **No obvious control** - LP not easily removable\n\n🔒 **WHAT \"LP LOCK\" MEANS:**\nLP Lock = liquidity tokens are time-locked so dev can't pull liquidity instantly.\n\n⚠️ **LP LOCK REDUCES RUG RISK - IT DOES NOT PREVENT DUMPS!**",
+      "images": [],
+      "actions": ["Rug detection", "Good coins", "Risk rules"]
+    },
+    "rugpull": {
+      "title": "HOW TO SPOT A RUG PULL",
+      "content": "🚨 **RUG DETECTION CHECKLIST:**\n\n1. **CHART PATTERN** - Healthy chart = heartbeat pattern (up, down, up). BAD chart = straight up then death drop.\n\n2. **GLOBAL FEES vs MARKET CAP** - Must match! Example: 3 SOL fees = 20-40k MC. If they don't match = RUG.\n\n3. **WALLET ANALYSIS:**\n   • Check holder dates - All \"1 month\" old = BUNDLED WALLETS = RUG\n   • All hold same amount of SOL = ONE PERSON = RUG\n   • Look for fat clusters on bubble map\n\n4. **BUBBLE MAP** - Should be dispersed. If it looks like DEATH STAR = RUG.\n\n5. **LIQUIDITY** - Must have healthy liquidity. Zero liquidity = money gets LOCKED.\n\n⚠️ ALWAYS CHECK: Fees, Wallets, Dates, Bubble Map, Liquidity",
+      "images": [],
+      "actions": ["Good coin signs", "Show filters", "Risk rules"]
+    },
+    "goodcoin": {
+      "title": "HOW TO SPOT A GOOD COIN",
+      "content": "✅ **GOOD COIN CHECKLIST:**\n\n1. **HEALTHY CHART** - Starts low, builds, continues up (not straight up/down)\n\n2. **FEES MATCH MC** - Proper relationship between fees and market cap\n\n3. **DECENT LIQUIDITY** - Must have good liquidity for entry/exit\n\n4. **VOLUME** - Look for **200+ buys on 5-minute chart**. More buys = more interest.\n\n5. **WALLET DISTRIBUTION:**\n   • Different wallet ages (not all \"1 month\")\n   • Different SOL holdings\n   • Nobody holds >4% (3% okay, 5%+ is risk)\n\n6. **BUBBLE MAP** - Dispersed, not clustered. No fat whales.\n\n7. **NARRATIVE** - Good memeable story that spreads naturally\n\n8. **CA POSTED** - Contract Address in community = green flag",
+      "images": [],
+      "actions": ["Rug detection", "Risk mgmt", "Filters"]
+    },
+    "risk": {
+      "title": "RISK MANAGEMENT",
+      "content": "🛡️ **RISK RULES:**\n\n1. **POSITION SIZE:** Risk only 1-5% per trade. NEVER go all-in.\n\n2. **STOP LOSS:**\n   • Once up 30-50%, set stop 3-10% above entry\n   • Don't let losses go below -15% max\n   • Cut red candles at entry FAST\n\n3. **TAKING PROFITS:**\n   • At 2x: Sell 50%\n   • Every 30% up: Sell 20%\n   • Big green candles: Sell 20%\n   • Psychological levels (100k, 200k, 1M): Sell 20%\n\n4. **NOT IN PROFIT?**\n   • Sell aggressively on first red\n   • Don't let it go under -15%\n\n⚡ This game is about PORT MANAGEMENT and STAYING IN THE GAME!",
+      "images": [],
+      "actions": ["Rug detection", "Good coins", "Study trades"]
+    },
+    "filters": {
+      "title": "AXIOM FILTER SETTINGS",
+      "content": "📊 **NEW PAIRS FILTERS:**\n• Protocol: Pump.fun only\n• Dev holding: 5% max\n• Bundles: 40% max\n• Pro traders: 15%\n• MC: 5k min, Volume: 10k\n\n🎯 **FINAL STRETCH:**\n• Volume: 30k\n• MC: 20k\n• Top 10 holders: 40%\n• 200+ buys on 5min chart\n\nThese filters keep you safe!",
+      "images": [],
+      "actions": ["Rug signs", "Good coins", "Risk rules"]
+    },
+    "workflow": {
+      "title": "APE → SCAN → WATCH WORKFLOW",
+      "content": "🎯 **TRADING STAGES:**\n\n**APE** - Caller bought in\n• Entry taken\n• Now monitoring\n\n**SCAN** - Analyzing coin\n• Hasn't bought yet\n• Checking chart/wallets\n• Looking at bubble map\n\n**WATCH** - Looking for dip\n• Coin looks good\n• Waiting for entry\n• Ready to ape on dip",
+      "images": [],
+      "actions": ["Good coins", "Risk rules", "Entry tips"]
+    },
+    "ca": {
+      "title": "WHAT IS CA?",
+      "content": "📍 **CA = CONTRACT ADDRESS**\n\nThe EXACT unique identifier for a token.\n\n**HOW TO USE:**\n1. Copy the CA\n2. Paste into Axiom/DEX\n3. Finds exact coin\n\n**WHY IT MATTERS:**\n• Many coins have similar names\n• CA guarantees RIGHT coin\n• Prevents fake/scam versions\n\nAlways verify CA in community!",
+      "images": [],
+      "actions": ["Rug detection", "Good coins", "Workflow"]
+    },
+    "settings": {
+      "title": "BUY/SELL SETTINGS",
+      "content": "⚙️ **TRADING SETTINGS:**\n\n**SLIPPAGE:** 10-30% (typically 15%)\n\n**FEES:** Always keep extra SOL for fees\n\n**BUY SETTINGS:**\n• Set max entry amount\n• Use limit orders when possible\n\n**SELL SETTINGS:**\n• Set stop loss\n• Take profit targets\n• Scale out strategy",
+      "images": [],
+      "actions": ["Risk rules", "Filters", "Entry tips"]
+    },
+    "bundles": {
+      "title": "BUNDLED WALLETS",
+      "content": "⚠️ **BUNDLE DETECTION:**\n\n**WHAT ARE BUNDLES?**\nMultiple wallets controlled by ONE person to fake activity.\n\n**HOW TO SPOT:**\n• All wallets same age\n• Hold same SOL amounts\n• Death star bubble map\n• 3-ring symbol on trades\n\n**WHY IT MATTERS:**\nBundled coins = RUG WAITING TO HAPPEN\n\nAlways check wallet dates and amounts!",
+      "images": [],
+      "actions": ["Rug detection", "Good coins", "Filters"]
+    },
+    "volume": {
+      "title": "VOLUME ANALYSIS",
+      "content": "📊 **VOLUME MATTERS:**\n\n**WHAT TO LOOK FOR:**\n• 200+ buys on 5min chart = STRONG\n• Volume matching MC = REAL\n• Consistent volume = HEALTHY\n• Volume spikes = ATTENTION\n\n**ON PADRE:**\nCheck volume indicators for confirmation\n\n**ON AXIOM:**\nUse volume filters to find active coins\n\nVolume = Truth. No volume = No interest.",
+      "images": [],
+      "actions": ["Good coins", "Filters", "Entry tips"]
+    },
+    "referrals": {
+      "title": "PLATFORM REFERRAL LINKS",
+      "content": "🔗 **TRADER U PLATFORM LINKS:**\n\n**AXIOM (Main Platform):**\nBest for beginners, clean interface, mobile friendly\n\n**NOVA (Advanced):**\n25% fee cashback, for experienced traders\n\n**PADRE (Terminal):**\nAdvanced terminal, pro traders only\n\n📱 **MOBILE SETUP:**\n1. Use Chrome browser\n2. Go to Axiom link\n3. Connect Phantom wallet\n4. Start trading",
+      "images": [],
+      "actions": ["Filters", "Risk rules", "Good coins"]
+    }
+  },
+  "education": {
+    "quotes": [
+      "💎 \"The best traders are the most disciplined.\" - Stay focused.",
+      "🎯 \"Cut your losers early, let your winners run.\" - Old wisdom.",
+      "⚡ \"Patience beats FOMO every time.\" - Wait for your setup.",
+      "🔥 \"Survive first, profit second.\" - Risk management wins.",
+      "💪 \"Study your trades. Every loss is a lesson.\" - Keep learning."
+    ],
+    "tips": [
+      "✅ ALWAYS check wallet dates before entering",
+      "✅ Look for 200+ buys on 5min chart",
+      "✅ Set stop loss once up 30-50%",
+      "✅ Scale out at 2x - take 50% profit",
+      "✅ Verify CA is posted in community"
+    ],
+    "warnings": [
+      "⚠️ DON'T buy the top - wait for dip",
+      "⚠️ DON'T ape without checking wallets",
+      "⚠️ DON'T hold past -15% loss",
+      "⚠️ DON'T FOMO into pumps",
+      "⚠️ DON'T ignore bundled wallet warnings"
+    ],
+    "checklist": [
+      "Fees match market cap?",
+      "Wallet dates dispersed?",
+      "Bubble map healthy?",
+      "200+ buys on 5min?",
+      "CA posted in community?",
+      "LP locked? How long?",
+      "Test sell successful?",
+      "Stop loss planned?"
+    ]
+  }
+}
