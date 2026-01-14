@@ -1,4 +1,4 @@
-// engine.js
+// engine.js - Simple string responses
 
 function normalize(text) {
   return (text || "").trim().toLowerCase();
@@ -11,15 +11,8 @@ function containsGreeting(text, config) {
 
 function shouldRespond(userMessage, state, config) {
   if (!config.speakOnlyAfterGreeting) return true;
-
   const strict = !!config.strictHelloOnlyMode;
-
-  // If NOT strict, allow explicit questions even without greeting
-  if (!strict) {
-    const explicitQuestion = (userMessage || "").includes("?");
-    if (explicitQuestion) return true;
-  }
-
+  if (!strict && (userMessage || "").includes("?")) return true;
   return !!state.greeted || containsGreeting(userMessage, config);
 }
 
@@ -33,113 +26,74 @@ function nextState(userMessage, state, config) {
 
 function getResponse(userMessage, state, knowledgeBase) {
   const msg = normalize(userMessage);
+  const config = knowledgeBase.engineConfig;
 
-  // greeting menu (only triggers when the greeting is the current message)
-  if (state.greeted && state.onboardingStage === 0 && containsGreeting(userMessage, knowledgeBase.engineConfig)) {
-    return {
-      type: "menu",
-      text: "Yo — what do you need help with?",
-      options: [
-        "Set up Axiom filters",
-        "Learn rugs vs good coins",
-        "Buy/sell settings + stop loss"
-      ]
-    };
+  // Greeting menu
+  if (state.greeted && state.onboardingStage === 0 && containsGreeting(userMessage, config)) {
+    return "Yo — what do you need help with?\n\n1) Set up Axiom filters\n2) Learn rugs vs good coins\n3) Buy/sell settings + stop loss\n\nReply with a number or ask a question.";
   }
 
-  // Intent routing
-  if (msg.includes("filter") || msg.includes("axiom") || msg === "1") {
-    return {
-      type: "knowledge",
-      key: "filters",
-      text: "Go Pulse tab (not Discover) → Filters → Import → paste JSON → Apply All. Repeat for New Pairs, Final Stretch, Migrated. Then turn Dynamic BC OFF on all three."
-    };
+  // Number shortcuts
+  if (msg === "1") return knowledgeBase.knowledge?.filters?.content || "Check Axiom filters in Pulse tab.";
+  if (msg === "2") return knowledgeBase.knowledge?.rugpull?.content || "Check rug detection guide.";
+  if (msg === "3") return knowledgeBase.knowledge?.settings?.content || "Check buy/sell settings.";
+
+  // Intent matching
+  if (msg.includes("filter") || msg.includes("axiom")) {
+    return knowledgeBase.knowledge?.filters?.content || "Go Pulse tab → Filters → Import → paste JSON → Apply All.";
   }
 
-  if (msg.includes("stop loss") || msg.includes("trailing") || msg.includes("setting") || msg === "3") {
-    return {
-      type: "knowledge",
-      key: "settings",
-      text: "There's two types: trailing SL and stop loss. On mobile, bottom right → advanced strategy → set TP/SL. Keep extra SOL for fees so you can sell."
-    };
+  if (msg.includes("stop loss") || msg.includes("trailing") || msg.includes("setting")) {
+    return knowledgeBase.knowledge?.settings?.content || "Set stop loss in advanced strategy. Keep SOL for fees.";
   }
 
-  if (msg.includes("rug") || msg.includes("bundled") || msg.includes("bundle") || msg === "2") {
-    return {
-      type: "knowledge",
-      key: "rugpull",
-      text: "Rug check: chart pattern (heartbeat vs straight-up then death), fees must match market cap, wallet dates (all 1 month = bundled), bubble map (death star = rug), and liquidity."
-    };
+  if (msg.includes("rug") || msg.includes("bundled") || msg.includes("bundle")) {
+    return knowledgeBase.knowledge?.rugpull?.content || "Check chart pattern, wallet dates, bubble map, liquidity.";
   }
 
-  if (msg.includes("good") || msg.includes("find")) {
-    return {
-      type: "knowledge",
-      key: "goodcoin"
-    };
+  if (msg.includes("good") || msg.includes("find coin")) {
+    return knowledgeBase.knowledge?.goodcoin?.content || "Look for healthy chart, volume, dispersed wallets.";
   }
 
-  if (msg.includes("risk") || msg.includes("position")) {
-    return {
-      type: "knowledge",
-      key: "risk"
-    };
+  if (msg.includes("risk") || msg.includes("position") || msg.includes("stop")) {
+    return knowledgeBase.knowledge?.risk?.content || "Risk 1-5% per trade. Set stop loss. Take profits at 2x.";
   }
 
   if (msg.includes("liq") || msg.includes("lp") || msg.includes("lock")) {
-    return {
-      type: "knowledge",
-      key: "liquidity"
-    };
+    return knowledgeBase.knowledge?.liquidity?.content || "LP lock reduces rug risk but doesn't prevent dumps.";
   }
 
   if (msg.includes("refer") || msg.includes("link") || msg.includes("nova") || msg.includes("padre")) {
-    return {
-      type: "knowledge",
-      key: "referrals"
-    };
+    return knowledgeBase.knowledge?.referrals?.content || "Check platform links for Axiom, Nova, Padre.";
   }
 
   if (msg.includes("narrative") || msg.includes("meta")) {
-    return {
-      type: "text",
-      text: "Research is mostly narrative + meta: ask why the meme exists and whether it fits current momentum (AI, politics, animals, culture/viral moments)."
-    };
+    return "Research is mostly narrative + meta: ask why the meme exists and whether it fits current momentum (AI, politics, animals, culture/viral moments).";
   }
 
   if (msg.includes("volume")) {
-    return {
-      type: "knowledge",
-      key: "volume"
-    };
+    return knowledgeBase.knowledge?.volume?.content || "Look for 200+ buys on 5min chart. Volume = truth.";
   }
 
   if (msg.includes("ca") || msg.includes("contract")) {
-    return {
-      type: "knowledge",
-      key: "ca"
-    };
+    return knowledgeBase.knowledge?.ca?.content || "CA = Contract Address. Copy and paste into Axiom to find exact coin.";
   }
 
   if (msg.includes("workflow") || msg.includes("ape") || msg.includes("scan") || msg.includes("watch")) {
-    return {
-      type: "knowledge",
-      key: "workflow"
-    };
+    return knowledgeBase.knowledge?.workflow?.content || "APE = bought in. SCAN = analyzing. WATCH = waiting for dip.";
+  }
+
+  if (msg.includes("help") || msg.includes("start") || msg.includes("what can")) {
+    return "I can help with:\n\n• Rug detection\n• Good coin checklist\n• Risk management\n• Axiom filters\n• Buy/sell settings\n• Platform links\n\nJust ask about any topic!";
   }
 
   // Default fallback
-  return {
-    type: "fallback",
-    text: "Got you. Tell me what screen you're on (Axiom / Padre / Phantom) and what you're trying to do (buy, sell, filters, or checking a coin).",
-    options: ["Rug detection", "Risk rules", "Platform links"]
-  };
+  return "Got you. Tell me what screen you're on (Axiom / Padre / Phantom) and what you're trying to do (buy, sell, filters, or checking a coin).";
 }
 
-// Factory so you can wire it into any UI
 export function createEngine(knowledgeBase) {
-  const config = knowledgeBase.engineConfig;
-  let state = { greeted: false };
+  const config = knowledgeBase.engineConfig || {};
+  let state = { greeted: false, onboardingStage: 0 };
 
   return {
     onMessage(userMessage) {
@@ -149,10 +103,6 @@ export function createEngine(knowledgeBase) {
     },
     getState() {
       return { ...state };
-    },
-    // Expose for UI to check
-    isGreeted() {
-      return state.greeted;
     }
   };
 }
