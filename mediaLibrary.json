@@ -1,0 +1,78 @@
+{
+  "mediaLibrary": {
+    "items": [
+      {
+        "id": "padre_stoploss",
+        "title": "Padre Stop Loss UI",
+        "type": "image",
+        "url": "https://github.com/user-attachments/assets/bf294ee3-a038-41dd-9d99-571a2840f739",
+        "tags": ["padre", "stoploss", "settings", "tp-sl"],
+        "useWhen": ["User asks how to set stop loss on Padre", "User can’t find advanced strategy", "User asks trailing vs stop loss"],
+        "relatedKnowledgeKeys": ["knowledge.settings", "playbook.execution.stopLossTypes"]
+      },
+      {
+        "id": "padre_volume_check",
+        "title": "Padre Volume Check",
+        "type": "image",
+        "url": "https://github.com/user-attachments/assets/da354a0d-777a-4966-901c-44d3be6256d3",
+        "tags": ["padre", "volume", "confirmation"],
+        "useWhen": ["User asks how to check volume on Padre", "User asks what volume means"],
+        "relatedKnowledgeKeys": ["knowledge.volume", "playbook.volumeRule"]
+      },
+      {
+        "id": "axiom_volume_check",
+        "title": "Axiom Volume Check",
+        "type": "image",
+        "url": "https://github.com/user-attachments/assets/4e984939-d0c5-46f9-b059-c33159d44e6a",
+        "tags": ["axiom", "volume", "filters"],
+        "useWhen": ["User asks how to check volume on Axiom", "User asks why a coin looks dead"],
+        "relatedKnowledgeKeys": ["knowledge.volume", "axiomFilters"]
+      },
+      {
+        "id": "rug_example_1",
+        "title": "Potential Rug Example",
+        "type": "image",
+        "url": "https://github.com/user-attachments/assets/f1cc101a-fdba-4e41-abbb-5212a174f5bf",
+        "tags": ["rug", "chart", "bundles", "danger"],
+        "useWhen": ["User asks what a rug looks like", "User is about to ape a bad chart"],
+        "relatedKnowledgeKeys": ["knowledge.rugpull", "knowledge.bundles"]
+      },
+      {
+        "id": "apescan_lingo",
+        "title": "Ape Scan Lingo Reference",
+        "type": "image",
+        "url": "https://github.com/user-attachments/assets/fc33b3fa-9641-4acc-a6f6-bb7412c99286",
+        "tags": ["apescan", "lingo", "scan", "wallets"],
+        "useWhen": ["User asks what terms mean on Ape Scan", "User asks how to read scan tools"],
+        "relatedKnowledgeKeys": ["knowledge.workflow", "knowledge.bundles", "knowledge.rugpull"]
+      },
+      {
+        "id": "rug_example_2",
+        "title": "Rug Example (Another)",
+        "type": "image",
+        "url": "https://github.com/user-attachments/assets/c9397444-68fb-4372-8b3a-f6e625cd434d",
+        "tags": ["rug", "chart", "danger"],
+        "useWhen": ["User asks for another rug reference", "User is unsure if chart is safe"],
+        "relatedKnowledgeKeys": ["knowledge.rugpull"]
+      },
+      {
+        "id": "sell_settings",
+        "title": "Sell Settings Reference",
+        "type": "image",
+        "url": "https://github.com/user-attachments/assets/52acfe03-c060-4915-94dd-0d3ccbc1a1a3",
+        "tags": ["sell", "settings", "slippage", "tp-sl"],
+        "useWhen": ["User asks what to set for sells", "User can’t close trade"],
+        "relatedKnowledgeKeys": ["knowledge.settings", "onboarding.setup.commonIssue"]
+      },
+      {
+        "id": "buy_settings",
+        "title": "Buy Settings Reference",
+        "type": "image",
+        "url": "https://github.com/user-attachments/assets/b0bfa3b8-760d-40ee-9d08-0b6bf9d0cfb6",
+        "tags": ["buy", "settings", "slippage"],
+        "useWhen": ["User asks what to set for buys", "User asks slippage"],
+        "relatedKnowledgeKeys": ["knowledge.settings", "playbook.execution.slippage"]
+      }
+    ]
+  }
+}
