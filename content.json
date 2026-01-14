@@ -1,10 +1,22 @@
 {
   "meta": {
     "name": "Trader U Degen Engine",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "policy": {
       "speakOnlyAfterGreeting": true,
-      "greetingKeywords": ["hello", "hi", "yo", "hey", "sup", "what's up", "whats up", "wassup", "gm", "good morning", "good evening"],
+      "greetingKeywords": [
+        "hello",
+        "hi",
+        "yo",
+        "hey",
+        "sup",
+        "what's up",
+        "whats up",
+        "wassup",
+        "gm",
+        "good morning",
+        "good evening"
+      ],
       "defaultLanguage": "en",
       "allowSpanish": true
     }
@@ -159,27 +171,69 @@
   "knowledge": {
     "liquidity": {
       "title": "LIQUIDITY & LP LOCK (EXIT SAFETY)",
-      "content": "💧 **LIQUIDITY (LP) = THE EXIT**\n\nLiquidity is the pool you trade against. If it's weak or controlled, you can get TRAPPED.\n\n✅ **WHAT GOOD LIQUIDITY LOOKS LIKE:**\n1. **Enough LP for your size** - Buy/sell without massive price impact\n2. **Steady volume** - Real buys + sells, not one-sided\n3. **No obvious control** - LP not easily removable\n\n🔒 **WHAT \"LP LOCK\" MEANS:**\nLP Lock = liquidity tokens are time-locked so dev can't pull liquidity instantly.\n\n⚠️ **LP LOCK REDUCES RUG RISK - IT DOES NOT PREVENT DUMPS!**",
+      "content": "💧 **LIQUIDITY (LP) = THE EXIT**\n\nLiquidity is the pool you trade against. If it's weak or controlled, you can get TRAPPED.\n\n✅ **WHAT GOOD LIQUIDITY LOOKS LIKE:**\n1. **Enough LP for your size** - Buy/sell without massive price impact\n2. **Steady volume** - Real buys + sells, not one-sided\n3. **No obvious control** - LP not easily removable\n\n🔒 **WHAT \"LP LOCK\" MEANS:**\nLP Lock = liquidity tokens are time-locked so dev can't pull liquidity instantly.\n\n⚠️ **LP LOCK REDUCES RUG RISK - IT DOES NOT PREVENT DUMPS!**\n\n✅ **PRO TIP:** Even with a lock, ALWAYS plan your exit. Locks don't stop whales from dumping.",
       "images": [],
-      "actions": ["Rug detection", "Good coins", "Risk rules"]
+      "actions": ["LP lock", "How to verify locks", "Liquidity removal", "Rug detection", "Risk rules"]
+    },
+    "lp_lock": {
+      "title": "LP LOCK (LOCKED LIQUIDITY) — GREEN FLAG OR CAP?",
+      "content": "🔒 **LP LOCK:**\n\nAn LP lock means liquidity tokens are locked so the team can’t instantly pull liquidity.\n\n✅ **GREEN FLAGS:**\n• Locked for weeks/months (not hours)\n• On-chain proof exists (not just a screenshot)\n• Lock amount matches what the coin claims\n\n⚠️ **COMMON TRAPS:**\n• “Locked” for 1–24 hours (basically nothing)\n• Partial lock (small % locked)\n• Split LP: they lock one small pool and keep the main pool movable\n• Fake proof links / edited screenshots\n\n**BOTTOM LINE:** Verify on-chain or assume it’s NOT locked.",
+      "images": [],
+      "actions": ["How to verify locks", "Liquidity", "Liquidity removal", "Rug detection", "Good coins"]
+    },
+    "verify_locks": {
+      "title": "HOW TO VERIFY LP LOCKS (ON-CHAIN, NO TRUST)",
+      "content": "✅ **VERIFYING A LOCK (THE RIGHT WAY):**\n\n**Step 1 — Find the main pair** (usually SOL/Token)\n**Step 2 — Check LP token holders** (who holds the LP tokens?)\n**Step 3 — Look for a locker contract** (LP tokens sitting inside a lock contract)\n**Step 4 — Confirm unlock time + amount**\n**Step 5 — Match the numbers** (does the locked amount match claims?)\n**Step 6 — Watch for split LP** (partial lock = risk)\n\n**RULE:** If you can’t verify on-chain, treat it as NOT locked.",
+      "images": [],
+      "actions": ["LP lock", "Liquidity", "Liquidity removal", "Rug detection"]
+    },
+    "liquidity_removal": {
+      "title": "LIQUIDITY REMOVAL (THE CLASSIC RUG MECHANIC)",
+      "content": "🚨 **LIQUIDITY REMOVAL = RUG**\n\nIf the team controls LP and removes it, the pool collapses and you get trapped.\n\n**SIGNS BEFORE IT HITS:**\n• LP not locked / unverifiable\n• Weird wallet patterns + bundled vibes\n• Sudden hype push with weak fundamentals\n• Sells start filling worse and worse\n\n**WHAT IT LOOKS LIKE LIVE:**\n• Instant death candle\n• Massive price impact\n• People can’t sell or sell for dust\n\n**RULE:** If LP isn't verifiably locked, size down hard or skip.",
+      "images": [],
+      "actions": ["LP lock", "How to verify locks", "Rug detection", "Risk rules"]
     },
     "rugpull": {
       "title": "HOW TO SPOT A RUG PULL",
       "content": "🚨 **RUG DETECTION CHECKLIST:**\n\n1. **CHART PATTERN** - Healthy chart = heartbeat pattern (up, down, up). BAD chart = straight up then death drop.\n\n2. **GLOBAL FEES vs MARKET CAP** - Must match! Example: 3 SOL fees = 20-40k MC. If they don't match = RUG.\n\n3. **WALLET ANALYSIS:**\n • Check holder dates - All \"1 month\" old = BUNDLED WALLETS = RUG\n • All hold same amount of SOL = ONE PERSON = RUG\n • Look for fat clusters on bubble map\n\n4. **BUBBLE MAP** - Should be dispersed. If it looks like DEATH STAR = RUG.\n\n5. **LIQUIDITY** - Must have healthy liquidity. Zero liquidity = money gets LOCKED.\n\n⚠️ ALWAYS CHECK: Fees, Wallets, Dates, Bubble Map, Liquidity",
       "images": [],
-      "actions": ["Good coin signs", "Show filters", "Risk rules"]
+      "actions": ["Good coin signs", "Show filters", "LP lock", "Risk rules"]
     },
     "goodcoin": {
       "title": "HOW TO SPOT A GOOD COIN",
-      "content": "✅ **GOOD COIN CHECKLIST:**\n\n1. **HEALTHY CHART** - Starts low, builds, continues up (not straight up/down)\n\n2. **FEES MATCH MC** - Proper relationship between fees and market cap\n\n3. **DECENT LIQUIDITY** - Must have good liquidity for entry/exit\n\n4. **VOLUME** - Look for **200+ buys on 5-minute chart**. More buys = more interest.\n\n5. **WALLET DISTRIBUTION:**\n • Different wallet ages (not all \"1 month\")\n • Different SOL holdings\n • Nobody holds >4% (3% okay, 5%+ is risk)\n\n6. **BUBBLE MAP** - Dispersed, not clustered. No fat whales.\n\n7. **NARRATIVE** - Good memeable story that spreads naturally\n\n8. **CA POSTED** - Contract Address in community = green flag",
+      "content": "✅ **GOOD COIN CHECKLIST:**\n\n1. **HEALTHY CHART** - Starts low, builds, continues up (not straight up/down)\n\n2. **FEES MATCH MC** - Proper relationship between fees and market cap\n\n3. **DECENT LIQUIDITY** - Must have good liquidity for entry/exit\n\n4. **VOLUME** - Look for **200+ buys on 5-minute chart**. More buys = more interest.\n\n5. **WALLET DISTRIBUTION:**\n • Different wallet ages (not all \"1 month\")\n • Different SOL holdings\n • Nobody holds >4% (3% okay, 5%+ is risk)\n\n6. **BUBBLE MAP** - Dispersed, not clustered. No fat whales.\n\n7. **NARRATIVE** - Good memeable story that spreads naturally\n\n8. **CA POSTED** - Contract Address in community = green flag\n\n9. **TEST SELL** - If possible, do a tiny test sell. If it's weird/sluggish, be careful.",
       "images": [],
-      "actions": ["Rug detection", "Risk mgmt", "Filters"]
+      "actions": ["Rug detection", "Risk mgmt", "Filters", "LP lock", "Test sell"]
     },
     "risk": {
       "title": "RISK MANAGEMENT",
       "content": "🛡️ **RISK RULES:**\n\n1. **POSITION SIZE:** Risk only 1-5% per trade. NEVER go all-in.\n\n2. **STOP LOSS:**\n • Once up 30-50%, set stop 3-10% above entry\n • Don't let losses go below -15% max\n • Cut red candles at entry FAST\n\n3. **TAKING PROFITS:**\n • At 2x: Sell 50%\n • Every 30% up: Sell 20%\n • Big green candles: Sell 20%\n • Psychological levels (100k, 200k, 1M): Sell 20%\n\n4. **NOT IN PROFIT?**\n • Sell aggressively on first red\n • Don't let it go under -15%\n\n⚡ This game is about PORT MANAGEMENT and STAYING IN THE GAME!",
       "images": [],
-      "actions": ["Rug detection", "Good coins", "Study trades"]
+      "actions": ["Stop loss", "Trailing stop", "Take profits", "Rug detection", "Good coins"]
+    },
+    "slippage": {
+      "title": "SLIPPAGE EXPLAINED",
+      "content": "📊 **SLIPPAGE:**\n\nSlippage is the difference between expected price and actual execution.\n\n**SETTINGS (MEME COINS):**\n• 10–15% for normal coins\n• 20–30% for fast-moving coins\n• Too low = transaction fails\n• Too high = you get wrecked on fills\n\n**TIP:** Start at **15%** and adjust based on how fast the coin moves.",
+      "images": [],
+      "actions": ["Settings", "Risk rules", "Liquidity", "Volume check"]
+    },
+    "stoploss": {
+      "title": "STOP LOSS (BASIC)",
+      "content": "🧯 **STOP LOSS:**\n\nA stop loss is a line in the sand so one coin doesn’t nuke your portfolio.\n\n**BASIC RULE:**\n• If you’re wrong, exit fast.\n\n**BEGINNER RULES:**\n• Don’t let it go past **-15%**\n• If you’re up **30–50%**, move the stop to **above entry**\n\n**WHY:**\nYou survive by cutting losers early.",
+      "images": [],
+      "actions": ["Trailing stop", "Risk management", "Take profits"]
+    },
+    "trailing_stop": {
+      "title": "TRAILING STOP LOSS (LET WINNERS RUN)",
+      "content": "📈 **TRAILING STOP:**\n\nA trailing stop moves up with price so you lock profit while giving room to run.\n\n**GOOD USE CASE:**\n• Coin is trending up but volatile\n\n**SIMPLE SETUP:**\n• Once up 30–50%: trail it 3–10% above entry\n• If you’re deep green: widen slightly so you don’t get wicked out\n\n**WARNING:**\n• Tight trailing stops get clipped in meme coins.\n\n**GOAL:** Capture the move without marrying the coin.",
+      "images": [],
+      "actions": ["Stop loss", "Risk management", "Take profits"]
+    },
+    "take_profits": {
+      "title": "TAKE PROFITS (SCALE OUT LIKE A PRO)",
+      "content": "💰 **TAKE PROFITS = YOU GET PAID**\n\n**DEFAULT PLAN:**\n• At **2x**: sell **50%**\n• Every **+30%** after: sell **20%**\n• Big green candles: sell **20%**\n\n**WHY:**\nMeme coins reverse fast. If you don’t take profits, you become exit liquidity.\n\n**RULE:** Real traders get paid on the way up.",
+      "images": [],
+      "actions": ["Risk management", "Stop loss", "Trailing stop"]
     },
     "filters": {
       "title": "AXIOM FILTER SETTINGS",
@@ -193,6 +247,12 @@
       "images": [],
       "actions": ["Good coins", "Risk rules", "Entry tips"]
     },
+    "test_sell": {
+      "title": "TEST SELL (THE FASTEST RUG CHECK)",
+      "content": "🧪 **TEST SELL:**\n\nBefore you size up, do a tiny sell to confirm exits work.\n\n**WHY IT’S POWERFUL:**\n• Some rugs show up as “you can buy but can’t sell”\n• Thin liquidity shows up immediately in terrible fills\n\n**HOW:**\n• Buy small\n• Sell a tiny amount\n• If it’s weird, laggy, or fails repeatedly — treat as high-risk",
+      "images": [],
+      "actions": ["Liquidity", "LP lock", "Rug detection", "Risk rules"]
+    },
     "ca": {
       "title": "WHAT IS CA?",
       "content": "📍 **CA = CONTRACT ADDRESS**\n\nThe EXACT unique identifier for a token.\n\n**HOW TO USE:**\n1. Copy the CA\n2. Paste into Axiom/DEX\n3. Finds exact coin\n\n**WHY IT MATTERS:**\n• Many coins have similar names\n• CA guarantees RIGHT coin\n• Prevents fake/scam versions\n\nAlways verify CA in community!",
@@ -203,13 +263,19 @@
       "title": "BUY/SELL SETTINGS",
       "content": "⚙️ **TRADING SETTINGS:**\n\n**SLIPPAGE:** 10-30% (typically 15%)\n\n**FEES:** Always keep extra SOL for fees\n\n**BUY SETTINGS:**\n• Set max entry amount\n• Use limit orders when possible\n\n**SELL SETTINGS:**\n• Set stop loss\n• Take profit targets\n• Scale out strategy",
       "images": [],
-      "actions": ["Risk rules", "Filters", "Entry tips"]
+      "actions": ["Slippage explained", "Risk rules", "Filters", "Stop loss"]
     },
     "bundles": {
       "title": "BUNDLED WALLETS",
       "content": "⚠️ **BUNDLE DETECTION:**\n\n**WHAT ARE BUNDLES?**\nMultiple wallets controlled by ONE person to fake activity.\n\n**HOW TO SPOT:**\n• All wallets same age\n• Hold same SOL amounts\n• Death star bubble map\n• 3-ring symbol on trades\n\n**WHY IT MATTERS:**\nBundled coins = RUG WAITING TO HAPPEN\n\nAlways check wallet dates and amounts!",
       "images": [],
       "actions": ["Rug detection", "Good coins", "Filters"]
+    },
+    "bubblemap": {
+      "title": "BUBBLE MAP (WHALES VS CLUSTERS)",
+      "content": "🫧 **BUBBLE MAP:**\n\nBubble maps show holder clusters.\n\n✅ **GOOD LOOK:**\n• Dispersed holders\n• No giant connected cluster\n• No “death star”\n\n🚨 **BAD LOOK:**\n• One massive cluster = one group controlling supply\n• Multiple connected wallets buying together\n\n**RULE:** If it looks like a death star, treat it like a rug setup.",
+      "images": [],
+      "actions": ["Bundled wallets", "Rug detection", "Good coins"]
     },
     "volume": {
       "title": "VOLUME ANALYSIS",
