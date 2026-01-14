@@ -75,7 +75,8 @@
         #bot-chat { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 20px; display: flex; flex-direction: column; gap: 15px; min-height: 0; -webkit-overflow-scrolling: touch; }
         #bot-chat::-webkit-scrollbar { width: 8px; }
         #bot-chat::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        .bot-message { padding: 15px; background: #1a1a1a; border-left: 4px solid var(--accent); font-size: 0.9rem; line-height: 1.8; animation: slideIn 0.3s ease; }
+        .bot-message { padding: 15px; background: #1a1a1a; border-left: 4px solid var(--accent); font-size: 0.9rem; line-height: 1.8; animation: slideIn 0.3s ease; white-space: pre-wrap; }
+        .bot-message.user { border-left-color: var(--green); background: #1a2a1a; }
         .bot-message img { max-width: 100%; margin: 15px 0; border: 2px solid var(--accent); border-radius: 4px; }
         .bot-message strong { color: var(--accent); }
         .message-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
@@ -117,6 +118,8 @@
             .neural-label { font-size: 0.65rem; padding: 6px 12px; top: 10px; }
             .terminal-title { font-size: 0.9rem; letter-spacing: 3px; }
             .data-feed { height: var(--mobile-feed); font-size: 0.65rem; padding: 8px 10px; }
+            .welcome-logo { font-size: 1.8rem; letter-spacing: 4px; }
+            .loading-bar { width: 280px; }
         }
     </style>
 </head>
@@ -184,23 +187,13 @@
     </div>
 
     <script type="module">
-        // ========================================
-        // IMPORT ENGINE FROM engine.js
-        // ========================================
         import { createEngine } from './engine.js';
         
-        // ========================================
-        // GLOBAL STATE
-        // ========================================
         let engine = null;
         let knowledgeBase = {};
         let facts = {};
         let education = {};
-        let mediaLibrary = [];
         
-        // ========================================
-        // LOAD ALL JSON FILES
-        // ========================================
         async function loadAllContent() {
             try {
                 const [content, media, engineConfig] = await Promise.all([
@@ -211,11 +204,10 @@
                 
                 facts = content.facts || {};
                 education = content.education || {};
-                mediaLibrary = media.mediaLibrary?.items || [];
                 
                 knowledgeBase = {
                     ...content,
-                    mediaLibrary: mediaLibrary,
+                    mediaLibrary: media.mediaLibrary?.items || [],
                     engineConfig: engineConfig
                 };
                 
@@ -224,7 +216,7 @@
                 updateUIWithContent();
                 document.getElementById('status-text').textContent = 'ONLINE';
                 document.getElementById('doc-count').textContent = Object.keys(content.knowledge || {}).length;
-                console.log('✅ Engine loaded');
+                console.log('✅ Engine loaded successfully');
                 return true;
             } catch (error) {
                 console.error('❌ Load failed:', error);
@@ -239,9 +231,6 @@
             if (facts.traderUInstagram) document.getElementById('ig-link').href = facts.traderUInstagram;
         }
 
-        // ========================================
-        // ENTER TERMINAL
-        // ========================================
         window.enterTerminal = async function() {
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('terminal-container').style.opacity = '1';
@@ -263,9 +252,6 @@
             if (element) element.classList.add('active');
         };
 
-        // ========================================
-        // MOBILE TABS
-        // ========================================
         function initMobileTabs() {
             const tabs = document.getElementById('mobile-tabs');
             const leftPanel = document.getElementById('left-panel');
@@ -291,9 +277,6 @@
             });
         }
 
-        // ========================================
-        // TERMINAL
-        // ========================================
         const commandOutput = document.getElementById('command-output');
         const commandInput = document.getElementById('command-input');
         
@@ -323,8 +306,6 @@
             Object.keys(knowledgeBase.knowledge || {}).forEach(key => {
                 commands[key] = () => { addCmd(`<span class="cmd-success">✓ Displaying "${key}" in bot</span>`); displayBotMessage(key); };
             });
-            commands.lp = () => commands.liquidity?.();
-            commands.links = () => commands.referrals?.();
         }
         
         function initTerminal() {
@@ -363,9 +344,6 @@
             }
         });
 
-        // ========================================
-        // NEURAL NETWORK
-        // ========================================
         function initNeuralNetwork() {
             const neuralArea = document.getElementById('neural-network');
             function getAreaDimensions() {
@@ -524,16 +502,17 @@
         }
 
         // ========================================
-        // BOT CHAT - WIRED TO ENGINE
+        // BOT CHAT
         // ========================================
         const botChat = document.getElementById('bot-chat');
         const botInput = document.getElementById('bot-input');
         const botSend = document.getElementById('bot-send');
         
-        function addBotMessage(html, actions = []) {
+        function addBotMessage(text, actions = []) {
+            removeWaitingState();
             const msg = document.createElement('div');
             msg.className = 'bot-message';
-            msg.innerHTML = html;
+            msg.textContent = text;
             if (actions.length > 0) {
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'message-actions';
@@ -552,14 +531,14 @@
         
         function addUserMessage(text) {
             const msg = document.createElement('div');
-            msg.className = 'bot-message';
-            msg.style.borderLeftColor = '#00ff00';
+            msg.className = 'bot-message user';
             msg.textContent = text;
             botChat.appendChild(msg);
             botChat.scrollTop = botChat.scrollHeight;
         }
         
         function showWaitingState() {
+            if (document.getElementById('waiting-state')) return;
             const w = document.createElement('div');
             w.className = 'waiting-indicator';
             w.id = 'waiting-state';
@@ -573,19 +552,9 @@
         }
         
         function displayBotMessage(key) {
-            removeWaitingState();
             const doc = knowledgeBase.knowledge?.[key];
             if (!doc) return;
-            let html = `<strong>${doc.title}</strong><br><br>${doc.content.replace(/\n/g, '<br>')}`;
-            if (key === 'referrals' && facts.axiomReferral) {
-                html = html.replace('Best for beginners', `<a href="${facts.axiomReferral}" target="_blank" style="color: var(--accent);">${facts.axiomReferral}</a><br>Best for beginners`);
-                html = html.replace('25% fee cashback', `<a href="${facts.novaReferral}" target="_blank" style="color: var(--accent);">${facts.novaReferral}</a><br>25% fee cashback`);
-                html = html.replace('Advanced terminal', `<a href="${facts.padreReferral}" target="_blank" style="color: var(--accent);">${facts.padreReferral}</a><br>Advanced terminal`);
-            }
-            const relatedMedia = mediaLibrary.filter(m => m.relatedKnowledgeKeys?.some(k => k.includes(key)));
-            relatedMedia.forEach(m => { if (m.url) html += `<br><img src="${m.url}" alt="${m.title}">`; });
-            if (doc.images?.length) doc.images.forEach(img => { html += `<br><img src="${img}" alt="Guide">`; });
-            addBotMessage(html, doc.actions || []);
+            addBotMessage(doc.content, doc.actions || []);
         }
         
         function handleAction(action) {
@@ -609,7 +578,7 @@
         }
         
         // ========================================
-        // SEND MESSAGE - WIRED TO ENGINE
+        // SEND MESSAGE - USES ENGINE
         // ========================================
         function sendBotQuery() {
             const query = botInput.value.trim();
@@ -618,17 +587,21 @@
             addUserMessage(query);
             
             if (!engine) {
-                addBotMessage('⏳ Engine loading...');
+                addBotMessage('⏳ Engine still loading, try again...');
                 return;
             }
             
             const response = engine.onMessage(query);
+            console.log('Engine response:', response);
             
-            // null = stay silent (not greeted yet)
-            if (response === null) return;
+            // null = stay silent (not greeted yet and not a question)
+            if (response === null) {
+                console.log('Engine returned null - waiting for greeting');
+                return;
+            }
             
-            removeWaitingState();
-            addBotMessage(response.replace(/\n/g, '<br>'), ['Rug detection', 'Risk rules', 'Platform links']);
+            // Got a response - display it
+            addBotMessage(response, ['Rug detection', 'Risk rules', 'Platform links']);
             
             if (engine.getState().greeted) {
                 botInput.placeholder = 'Ask me anything about trading...';
@@ -638,9 +611,6 @@
         botSend.addEventListener('click', sendBotQuery);
         botInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendBotQuery(); });
 
-        // ========================================
-        // DATA FEED
-        // ========================================
         function updateDataFeed() {
             const feeds = [
                 { base: 95284, variance: 500 },
