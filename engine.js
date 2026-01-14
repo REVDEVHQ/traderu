@@ -1,4 +1,4 @@
-// engine.js - Simple string responses
+// engine.js - Simple string responses (UPDATED w/ tracked wallets + alert toggles)
 
 function normalize(text) {
   return (text || "").trim().toLowerCase();
@@ -24,19 +24,95 @@ function nextState(userMessage, state, config) {
   return state;
 }
 
+function formatWalletLine(w, i) {
+  const emoji = w.emoji || "👀";
+  const name = (w.name && String(w.name).trim()) ? String(w.name).trim() : `Wallet ${i + 1}`;
+  const status = w.alertsOn ? "alerts ON" : "alerts OFF";
+  return `• ${emoji} ${name} — ${w.trackedWalletAddress} (${status})`;
+}
+
+function listTrackedWallets(knowledgeBase) {
+  const wallets = knowledgeBase.trackedWallets || knowledgeBase.walletTracking || [];
+  if (!Array.isArray(wallets) || wallets.length === 0) {
+    return "No tracked wallets yet. Add them to content.json under `trackedWallets`.";
+  }
+
+  const lines = wallets.map(formatWalletLine);
+  return (
+    `👀 **TRACKED WALLETS:**\n\n` +
+    `${lines.join("\n")}\n\n` +
+    `Commands:\n` +
+    `• **tracked wallets** (show list)\n` +
+    `• **alerts <name> on/off** (example: alerts cupsey off)\n`
+  );
+}
+
+function toggleWalletAlerts(msg, knowledgeBase) {
+  // Expected: "alerts cupsey off" or "alerts cchesta on"
+  const parts = msg.split(/\s+/).filter(Boolean); // ["alerts","cupsey","off"]
+  const target = (parts[1] || "").trim();
+  const stateWord = (parts[2] || "").trim();
+
+  if (!target || !["on", "off"].includes(stateWord)) {
+    return "Use: **alerts <name> on** or **alerts <name> off** (example: alerts cupsey off).";
+  }
+
+  const wallets = knowledgeBase.trackedWallets || knowledgeBase.walletTracking || [];
+  if (!Array.isArray(wallets) || wallets.length === 0) {
+    return "No tracked wallets found. Add them to content.json under `trackedWallets` first.";
+  }
+
+  const idx = wallets.findIndex(
+    (w) => (w.name || "").toLowerCase() === target.toLowerCase()
+  );
+
+  if (idx === -1) {
+    return `Couldn't find a tracked wallet named **${target}**. Type **tracked wallets** to see names.`;
+  }
+
+  wallets[idx].alertsOn = (stateWord === "on");
+
+  // Note: If your app caches the loaded JSON to localStorage elsewhere, keep it there.
+  // This is safe, but won't break if localStorage isn't used.
+  try {
+    localStorage.setItem("trackedWallets", JSON.stringify(wallets));
+  } catch (e) {}
+
+  return `✅ Alerts are now **${stateWord.toUpperCase()}** for **${wallets[idx].name}**.`;
+}
+
 function getResponse(userMessage, state, knowledgeBase) {
   const msg = normalize(userMessage);
-  const config = knowledgeBase.engineConfig;
+  const config = knowledgeBase.engineConfig || knowledgeBase.meta?.policy || {};
 
   // Greeting menu
   if (state.greeted && state.onboardingStage === 0 && containsGreeting(userMessage, config)) {
-    return "Yo — what do you need help with?\n\n1) Set up Axiom filters\n2) Learn rugs vs good coins\n3) Buy/sell settings + stop loss\n\nReply with a number or ask a question.";
+    return "Yo — what do you need help with?\n\n1) Set up Axiom filters\n2) Learn rugs vs good coins\n3) Buy/sell settings + stop loss\n4) Tracked wallets\n\nReply with a number or ask a question.";
   }
 
   // Number shortcuts
   if (msg === "1") return knowledgeBase.knowledge?.filters?.content || "Check Axiom filters in Pulse tab.";
   if (msg === "2") return knowledgeBase.knowledge?.rugpull?.content || "Check rug detection guide.";
   if (msg === "3") return knowledgeBase.knowledge?.settings?.content || "Check buy/sell settings.";
+  if (msg === "4") return listTrackedWallets(knowledgeBase);
+
+  // Wallet tracking intents
+  if (
+    msg.includes("tracked wallet") ||
+    msg.includes("tracked wallets") ||
+    msg.includes("wallets tracked") ||
+    msg.includes("wallet tracking") ||
+    msg === "track wallets" ||
+    msg === "tracked" ||
+    msg === "wallets"
+  ) {
+    return listTrackedWallets(knowledgeBase);
+  }
+
+  // Toggle alerts
+  if (msg.startsWith("alerts ")) {
+    return toggleWalletAlerts(msg, knowledgeBase);
+  }
 
   // Intent matching
   if (msg.includes("filter") || msg.includes("axiom")) {
@@ -84,7 +160,7 @@ function getResponse(userMessage, state, knowledgeBase) {
   }
 
   if (msg.includes("help") || msg.includes("start") || msg.includes("what can")) {
-    return "I can help with:\n\n• Rug detection\n• Good coin checklist\n• Risk management\n• Axiom filters\n• Buy/sell settings\n• Platform links\n\nJust ask about any topic!";
+    return "I can help with:\n\n• Rug detection\n• Good coin checklist\n• Risk management\n• Axiom filters\n• Buy/sell settings\n• Platform links\n• Tracked wallets\n\nJust ask about any topic!";
   }
 
   // Default fallback
@@ -92,7 +168,7 @@ function getResponse(userMessage, state, knowledgeBase) {
 }
 
 export function createEngine(knowledgeBase) {
-  const config = knowledgeBase.engineConfig || {};
+  const config = knowledgeBase.engineConfig || knowledgeBase.meta?.policy || {};
   let state = { greeted: false, onboardingStage: 0 };
 
   return {
