@@ -1,4 +1,14 @@
 {
+  "meta": {
+    "name": "Trader U Degen Engine",
+    "version": "1.0.0",
+    "policy": {
+      "speakOnlyAfterGreeting": true,
+      "greetingKeywords": ["hello", "hi", "yo", "hey", "sup", "what's up", "whats up", "wassup", "gm", "good morning", "good evening"],
+      "defaultLanguage": "en",
+      "allowSpanish": true
+    }
+  },
   "facts": {
     "axiomReferral": "https://axiom.trade/@plmedia",
     "novaReferral": "https://nova.trade/ref/TRADERU",
@@ -6,6 +16,145 @@
     "traderUYoutube": "https://www.youtube.com/@Chepetrades",
     "traderUTikTok": "https://www.tiktok.com/@chepeex_",
     "traderUInstagram": "https://www.instagram.com/chepeex/"
+  },
+  "onboarding": {
+    "title": "BEGINNER ONBOARDING (READ FIRST)",
+    "platformStack": {
+      "recommended": ["Axiom", "Nova", "Padre/Terminal", "Phantom"],
+      "notes": [
+        "Axiom, Nova, Terminal(Padre) are best if you want to stay ahead",
+        "Phantom/DEX is mostly for beginners or someone willing to invest long term"
+      ]
+    },
+    "setup": {
+      "phantomToAxiom": [
+        "Download Phantom wallet",
+        "Open Chrome (mobile or desktop) and go to Axiom",
+        "Create account and connect Phantom",
+        "Buy SOL on Phantom or buy on Coinbase and send to Phantom, then transfer to Axiom"
+      ],
+      "mobileTip": "If you are on mobile: bottom right says advanced strategy and you can set TP and SL",
+      "fundingNotes": [
+        "Apple Pay is used (via Phantom providers like MoonPay)",
+        "Robinhood/Coinbase may require waiting before SOL can be sent (new accounts)",
+        "Always keep extra SOL for fees (selling may fail if you don’t)"
+      ],
+      "commonIssue": {
+        "problem": "Trade won’t close / can’t sell",
+        "cause": "Not enough SOL for fees",
+        "fix": "Add a small amount of SOL for fees"
+      }
+    },
+    "axiomCoreRule": {
+      "usePulseNotDiscover": true,
+      "pulseTabs": ["newPairs", "finalStretch", "migrated"],
+      "reason": "Discover is trending; Pulse is what you want for finding coins and using filters"
+    }
+  },
+  "playbook": {
+    "title": "PAID DEGEN PLAYBOOK (SYSTEM)",
+    "principles": [
+      "Narrative and Meta matter most",
+      "Avoid rushing, start with what you can afford",
+      "Focus on stacking 2x’s early to build portfolio",
+      "Never let a coin drop 50% on you; don’t hold on hopium"
+    ],
+    "marketCaps": {
+      "earlyRisk": "20k-100k are risky but if they run you can make a lot of money",
+      "preferredBeginnerRange": "20k-40k higher chance for at least a 2x",
+      "thousandsVsMillions": [
+        "Both are fine; depends on community hype and transactions",
+        "If transactions seem low/dead, best not to ape",
+        "Buying in mills can still profit if community is strong (less common than early thousands)"
+      ]
+    },
+    "volumeRule": "Volume 30–100% of MC is VERY good",
+    "execution": {
+      "slippage": {
+        "range": "10-30%",
+        "typical": "15%",
+        "note": "Bounce slippage depending on the coin"
+      },
+      "stopLossTypes": ["stop loss", "trailing stop loss"],
+      "reEntry": "Usually one entry unless coin is explosive; re-buying depends on the coin’s behavior"
+    },
+    "profitTakingExamplesFromMembers": {
+      "explosiveCoins": "Sell 60% and keep 40% until chart slows",
+      "communityCoins": "Sell 70% when it hits 2x",
+      "hardToReadCoins": "Sell 100% when PNL is 50%"
+    },
+    "beginnerRiskRules": [
+      "If you're new, exit at your entry if it comes back - don't wait for profit",
+      "Never let a coin drop 50% on you. Do that on multiple coins and you'll lose everything",
+      "If entry keeps dropping, don't run on hopium; cut the loss or wait for better entry"
+    ],
+    "chartMindset": {
+      "notLikeNasdaq": true,
+      "note": "Not really unless you want to get technical, but it’s not necessary"
+    }
+  },
+  "axiomFilters": {
+    "title": "AXIOM FILTER IMPORT + SAFETY",
+    "instructions": [
+      "Go to Axiom homepage",
+      "Click Pulse tab (do not use Discover)",
+      "You will see: New Pairs, Final Stretch, Migrated",
+      "Open Filters > Import > paste JSON > Apply All",
+      "Repeat for all 3 tabs"
+    ],
+    "dynamicBC": {
+      "rule": "Turn Dynamic BC OFF on all three tabs",
+      "reason": "Dynamic BC coins are usually bundled rug charts"
+    },
+    "newPairsFilterJSON": {
+      "filters": {
+        "protocols": {
+          "raydium": false,
+          "pump": true,
+          "pumpAmm": false,
+          "launchLab": true,
+          "virtualCurve": true,
+          "launchACoin": true,
+          "bonk": true,
+          "boop": true,
+          "meteoraAmm": false,
+          "meteoraAmmV2": false,
+          "moonshot": true,
+          "moonshotApp": true,
+          "heaven": true,
+          "sugar": true,
+          "jupiterStudio": true,
+          "bags": true
+        },
+        "searchKeywords": [],
+        "excludeKeywords": [],
+        "dexPaid": false,
+        "mustEndInPump": false,
+        "age": { "min": null, "max": null },
+        "top10Holders": { "min": null, "max": 30 },
+        "devHolding": { "min": 0, "max": 1 },
+        "snipers": { "min": 0, "max": 15 },
+        "insiders": { "min": 0, "max": 25 },
+        "bundle": { "min": null, "max": null },
+        "holders": { "min": null, "max": null },
+        "botUsers": { "min": null, "max": null },
+        "bondingCurve": { "min": null, "max": null },
+        "liquidity": { "min": 500, "max": null },
+        "volume": { "min": 3400, "max": null },
+        "marketCap": { "min": 2900, "max": 15000 },
+        "fees": { "min": null, "max": null },
+        "txns": { "min": 30, "max": null },
+        "numBuys": { "min": 15, "max": null },
+        "numSells": { "min": 3, "max": null },
+        "numMigrations": { "min": null, "max": null },
+        "twitter": { "min": null, "max": null },
+        "twitterExists": false,
+        "website": false,
+        "telegram": false,
+        "atLeastOneSocial": true
+      },
+      "tab": "newPairs"
+    }
   },
   "knowledge": {
     "liquidity": {
@@ -16,19 +165,19 @@
     },
     "rugpull": {
       "title": "HOW TO SPOT A RUG PULL",
-      "content": "🚨 **RUG DETECTION CHECKLIST:**\n\n1. **CHART PATTERN** - Healthy chart = heartbeat pattern (up, down, up). BAD chart = straight up then death drop.\n\n2. **GLOBAL FEES vs MARKET CAP** - Must match! Example: 3 SOL fees = 20-40k MC. If they don't match = RUG.\n\n3. **WALLET ANALYSIS:**\n   • Check holder dates - All \"1 month\" old = BUNDLED WALLETS = RUG\n   • All hold same amount of SOL = ONE PERSON = RUG\n   • Look for fat clusters on bubble map\n\n4. **BUBBLE MAP** - Should be dispersed. If it looks like DEATH STAR = RUG.\n\n5. **LIQUIDITY** - Must have healthy liquidity. Zero liquidity = money gets LOCKED.\n\n⚠️ ALWAYS CHECK: Fees, Wallets, Dates, Bubble Map, Liquidity",
+      "content": "🚨 **RUG DETECTION CHECKLIST:**\n\n1. **CHART PATTERN** - Healthy chart = heartbeat pattern (up, down, up). BAD chart = straight up then death drop.\n\n2. **GLOBAL FEES vs MARKET CAP** - Must match! Example: 3 SOL fees = 20-40k MC. If they don't match = RUG.\n\n3. **WALLET ANALYSIS:**\n • Check holder dates - All \"1 month\" old = BUNDLED WALLETS = RUG\n • All hold same amount of SOL = ONE PERSON = RUG\n • Look for fat clusters on bubble map\n\n4. **BUBBLE MAP** - Should be dispersed. If it looks like DEATH STAR = RUG.\n\n5. **LIQUIDITY** - Must have healthy liquidity. Zero liquidity = money gets LOCKED.\n\n⚠️ ALWAYS CHECK: Fees, Wallets, Dates, Bubble Map, Liquidity",
       "images": [],
       "actions": ["Good coin signs", "Show filters", "Risk rules"]
     },
     "goodcoin": {
       "title": "HOW TO SPOT A GOOD COIN",
-      "content": "✅ **GOOD COIN CHECKLIST:**\n\n1. **HEALTHY CHART** - Starts low, builds, continues up (not straight up/down)\n\n2. **FEES MATCH MC** - Proper relationship between fees and market cap\n\n3. **DECENT LIQUIDITY** - Must have good liquidity for entry/exit\n\n4. **VOLUME** - Look for **200+ buys on 5-minute chart**. More buys = more interest.\n\n5. **WALLET DISTRIBUTION:**\n   • Different wallet ages (not all \"1 month\")\n   • Different SOL holdings\n   • Nobody holds >4% (3% okay, 5%+ is risk)\n\n6. **BUBBLE MAP** - Dispersed, not clustered. No fat whales.\n\n7. **NARRATIVE** - Good memeable story that spreads naturally\n\n8. **CA POSTED** - Contract Address in community = green flag",
+      "content": "✅ **GOOD COIN CHECKLIST:**\n\n1. **HEALTHY CHART** - Starts low, builds, continues up (not straight up/down)\n\n2. **FEES MATCH MC** - Proper relationship between fees and market cap\n\n3. **DECENT LIQUIDITY** - Must have good liquidity for entry/exit\n\n4. **VOLUME** - Look for **200+ buys on 5-minute chart**. More buys = more interest.\n\n5. **WALLET DISTRIBUTION:**\n • Different wallet ages (not all \"1 month\")\n • Different SOL holdings\n • Nobody holds >4% (3% okay, 5%+ is risk)\n\n6. **BUBBLE MAP** - Dispersed, not clustered. No fat whales.\n\n7. **NARRATIVE** - Good memeable story that spreads naturally\n\n8. **CA POSTED** - Contract Address in community = green flag",
       "images": [],
       "actions": ["Rug detection", "Risk mgmt", "Filters"]
     },
     "risk": {
       "title": "RISK MANAGEMENT",
-      "content": "🛡️ **RISK RULES:**\n\n1. **POSITION SIZE:** Risk only 1-5% per trade. NEVER go all-in.\n\n2. **STOP LOSS:**\n   • Once up 30-50%, set stop 3-10% above entry\n   • Don't let losses go below -15% max\n   • Cut red candles at entry FAST\n\n3. **TAKING PROFITS:**\n   • At 2x: Sell 50%\n   • Every 30% up: Sell 20%\n   • Big green candles: Sell 20%\n   • Psychological levels (100k, 200k, 1M): Sell 20%\n\n4. **NOT IN PROFIT?**\n   • Sell aggressively on first red\n   • Don't let it go under -15%\n\n⚡ This game is about PORT MANAGEMENT and STAYING IN THE GAME!",
+      "content": "🛡️ **RISK RULES:**\n\n1. **POSITION SIZE:** Risk only 1-5% per trade. NEVER go all-in.\n\n2. **STOP LOSS:**\n • Once up 30-50%, set stop 3-10% above entry\n • Don't let losses go below -15% max\n • Cut red candles at entry FAST\n\n3. **TAKING PROFITS:**\n • At 2x: Sell 50%\n • Every 30% up: Sell 20%\n • Big green candles: Sell 20%\n • Psychological levels (100k, 200k, 1M): Sell 20%\n\n4. **NOT IN PROFIT?**\n • Sell aggressively on first red\n • Don't let it go under -15%\n\n⚡ This game is about PORT MANAGEMENT and STAYING IN THE GAME!",
       "images": [],
       "actions": ["Rug detection", "Good coins", "Study trades"]
     },
