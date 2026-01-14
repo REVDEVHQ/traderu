@@ -1,0 +1,17 @@
+{
+  "speakOnlyAfterGreeting": true,
+  "strictHelloOnlyMode": false,
+  "greetingKeywords": [
+    "hello",
+    "hi",
+    "yo",
+    "hey",
+    "sup",
+    "what's up",
+    "whats up",
+    "wassup",
+    "gm",
+    "good morning",
+    "good evening"
+  ]
+}
