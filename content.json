@@ -226,19 +226,55 @@
     }
   },
 
+  "aliases": {
+    "/menu": "menu",
+    "/identity": "identity",
+    "media library": "mediaLibrary",
+    "lp lock": "lp_lock",
+    "lp_lock": "lp_lock",
+    "verify locks": "verify_locks",
+    "liquidity removal": "liquidity_removal",
+    "rug detection": "rugpull",
+    "good coin": "goodcoin",
+    "risk rules": "risk",
+    "stop loss": "stoploss",
+    "trailing stop": "trailing_stop",
+    "take profits": "take_profits",
+    "test sell": "test_sell",
+    "settings": "settings",
+    "platform links": "referrals",
+    "tracked wallets": "tracked_wallets",
+    "beginner onboarding": "beginner_onboarding",
+    "axiom filters": "filters"
+  },
+
   "knowledge": {
     "menu": {
       "title": "HELP MENU",
       "content": "What do you need help with?\n\n1) Set up Axiom filters\n2) Rug checks (avoid getting rugged)\n3) Buy/sell settings (TP/SL, slippage)\n4) Tracked wallets\n\nReply with a number, or tell me what you’re trying to do.",
       "images": [],
-      "actions": ["Axiom filters", "Rug detection", "Settings", "Tracked wallets"]
+      "actions": ["filters", "rugpull", "settings", "tracked_wallets"]
     },
 
     "identity": {
       "title": "WHO IS TRADER U / CHEPE?",
       "content": "Trader U is a meme-coin trading community focused on execution, safety checks, and risk management.\n\nChepe (ChepeTrades / chepeex_) is the creator behind the content and systems.\n\nTell me what platform you’re on (Axiom / Nova / Padre / Phantom) and what you’re trying to do, and I’ll give you step-by-step instructions.",
       "images": [],
-      "actions": ["Beginner onboarding", "Platform links", "Axiom filters"]
+      "actions": ["beginner_onboarding", "referrals", "filters"]
+    },
+
+    "beginner_onboarding": {
+      "title": "BEGINNER ONBOARDING (READ FIRST)",
+      "content": "Recommended stack: Axiom, Nova, Padre/Terminal, Phantom.\n\nQuick setup (Phantom → Axiom):\n1) Download Phantom wallet\n2) Go to Axiom and connect Phantom\n3) Buy SOL (Phantom or Coinbase → Phantom)\n4) Transfer SOL into Axiom\n\nMobile tip: bottom right → advanced strategy → set TP/SL.\n\nCommon issue: can’t sell / trade won’t close\nCause: not enough SOL for fees\nFix: add a small amount of SOL for fees.",
+      "images": [],
+      "actions": ["filters", "settings", "risk", "test_sell"]
+    },
+
+    "tracked_wallets": {
+      "title": "TRACKED WALLETS",
+      "content": "These are the wallets you track in your config. Use them for pattern study and to see what known wallets are doing.\n\nNote: alerts are informational only.",
+      "images": [],
+      "actions": ["menu", "rugpull", "test_sell"]
     },
 
     "mediaLibrary": {
@@ -308,140 +344,140 @@
       "title": "LIQUIDITY & LP LOCK (EXIT SAFETY)",
       "content": "💧 **LIQUIDITY (LP) = THE EXIT**\n\nLiquidity is the pool you trade against. If it's weak or controlled, you can get TRAPPED.\n\n✅ **WHAT GOOD LIQUIDITY LOOKS LIKE:**\n1. **Enough LP for your size** - Buy/sell without massive price impact\n2. **Steady volume** - Real buys + sells, not one-sided\n3. **No obvious control** - LP not easily removable\n\n🔒 **WHAT \"LP LOCK\" MEANS:**\nLP Lock = liquidity tokens are time-locked so dev can't pull liquidity instantly.\n\n⚠️ **LP LOCK REDUCES RUG RISK - IT DOES NOT PREVENT DUMPS!**\n\n✅ **PRO TIP:** Even with a lock, ALWAYS plan your exit. Locks don't stop whales from dumping.",
       "images": [],
-      "actions": ["LP lock", "How to verify locks", "Liquidity removal", "Rug detection", "Risk rules"]
+      "actions": ["lp_lock", "verify_locks", "liquidity_removal", "rugpull", "risk"]
     },
 
     "lp_lock": {
       "title": "LP LOCK (LOCKED LIQUIDITY) — GREEN FLAG OR CAP?",
       "content": "🔒 **LP LOCK:**\n\nAn LP lock means liquidity tokens are locked so the team can’t instantly pull liquidity.\n\n✅ **GREEN FLAGS:**\n• Locked for weeks/months (not hours)\n• On-chain proof exists (not just a screenshot)\n• Lock amount matches what the coin claims\n\n⚠️ **COMMON TRAPS:**\n• “Locked” for 1–24 hours (basically nothing)\n• Partial lock (small % locked)\n• Split LP: they lock one small pool and keep the main pool movable\n• Fake proof links / edited screenshots\n\n**BOTTOM LINE:** Verify on-chain or assume it’s NOT locked.",
       "images": [],
-      "actions": ["How to verify locks", "Liquidity", "Liquidity removal", "Rug detection", "Good coins"]
+      "actions": ["verify_locks", "liquidity", "liquidity_removal", "rugpull", "goodcoin"]
     },
 
     "verify_locks": {
       "title": "HOW TO VERIFY LP LOCKS (ON-CHAIN, NO TRUST)",
       "content": "✅ **VERIFYING A LOCK (THE RIGHT WAY):**\n\n**Step 1 — Find the main pair** (usually SOL/Token)\n**Step 2 — Check LP token holders** (who holds the LP tokens?)\n**Step 3 — Look for a locker contract** (LP tokens sitting inside a lock contract)\n**Step 4 — Confirm unlock time + amount**\n**Step 5 — Match the numbers** (does the locked amount match claims?)\n**Step 6 — Watch for split LP** (partial lock = risk)\n\n**RULE:** If you can’t verify on-chain, treat it as NOT locked.",
       "images": [],
-      "actions": ["LP lock", "Liquidity", "Liquidity removal", "Rug detection"]
+      "actions": ["lp_lock", "liquidity", "liquidity_removal", "rugpull"]
     },
 
     "liquidity_removal": {
       "title": "LIQUIDITY REMOVAL (THE CLASSIC RUG MECHANIC)",
       "content": "🚨 **LIQUIDITY REMOVAL = RUG**\n\nIf the team controls LP and removes it, the pool collapses and you get trapped.\n\n**SIGNS BEFORE IT HITS:**\n• LP not locked / unverifiable\n• Weird wallet patterns + bundled vibes\n• Sudden hype push with weak fundamentals\n• Sells start filling worse and worse\n\n**WHAT IT LOOKS LIKE LIVE:**\n• Instant death candle\n• Massive price impact\n• People can’t sell or sell for dust\n\n**RULE:** If LP isn't verifiably locked, size down hard or skip.",
       "images": [],
-      "actions": ["LP lock", "How to verify locks", "Rug detection", "Risk rules"]
+      "actions": ["lp_lock", "verify_locks", "rugpull", "risk"]
     },
 
     "rugpull": {
       "title": "HOW TO SPOT A RUG PULL",
       "content": "🚨 **RUG DETECTION CHECKLIST:**\n\n1. **CHART PATTERN** - Healthy chart = heartbeat pattern (up, down, up). BAD chart = straight up then death drop.\n\n2. **GLOBAL FEES vs MARKET CAP** - Must match! Example: 3 SOL fees = 20-40k MC. If they don't match = RUG.\n\n3. **WALLET ANALYSIS:**\n • Check holder dates - All \"1 month\" old = BUNDLED WALLETS = RUG\n • All hold same amount of SOL = ONE PERSON = RUG\n • Look for fat clusters on bubble map\n\n4. **BUBBLE MAP** - Should be dispersed. If it looks like DEATH STAR = RUG.\n\n5. **LIQUIDITY** - Must have healthy liquidity. Zero liquidity = money gets LOCKED.\n\n⚠️ ALWAYS CHECK: Fees, Wallets, Dates, Bubble Map, Liquidity",
       "images": [],
-      "actions": ["Good coin signs", "Show filters", "LP lock", "Risk rules"]
+      "actions": ["goodcoin", "filters", "lp_lock", "risk"]
     },
 
     "goodcoin": {
       "title": "HOW TO SPOT A GOOD COIN",
       "content": "✅ **GOOD COIN CHECKLIST:**\n\n1. **HEALTHY CHART** - Starts low, builds, continues up (not straight up/down)\n\n2. **FEES MATCH MC** - Proper relationship between fees and market cap\n\n3. **DECENT LIQUIDITY** - Must have good liquidity for entry/exit\n\n4. **VOLUME** - Look for **200+ buys on 5-minute chart**. More buys = more interest.\n\n5. **WALLET DISTRIBUTION:**\n • Different wallet ages (not all \"1 month\")\n • Different SOL holdings\n • Nobody holds >4% (3% okay, 5%+ is risk)\n\n6. **BUBBLE MAP** - Dispersed, not clustered. No fat whales.\n\n7. **NARRATIVE** - Good memeable story that spreads naturally\n\n8. **CA POSTED** - Contract Address in community = green flag\n\n9. **TEST SELL** - If possible, do a tiny test sell. If it’s weird/sluggish, be careful.",
       "images": [],
-      "actions": ["Rug detection", "Risk mgmt", "Filters", "LP lock", "Test sell"]
+      "actions": ["rugpull", "risk", "filters", "lp_lock", "test_sell"]
     },
 
     "risk": {
       "title": "RISK MANAGEMENT",
       "content": "🛡️ **RISK RULES:**\n\n1. **POSITION SIZE:** Risk only 1–5% per trade. Never go all-in.\n\n2. **STOP LOSS:**\n • Once up 30–50%, move your stop above entry\n • Don’t let a loss go past -15%\n • Cut red candles fast when you’re wrong\n\n3. **TAKE PROFITS:**\n • At 2x: sell 50%\n • Every +30% after: sell 20%\n • Big green candles: sell 20%\n • At big levels (100k, 200k, 1M): sell 20%\n\n⚡ Goal: stay alive first. Profit second.",
       "images": [],
-      "actions": ["Stop loss", "Trailing stop", "Take profits", "Rug detection", "Good coins"]
+      "actions": ["stoploss", "trailing_stop", "take_profits", "rugpull", "goodcoin"]
     },
 
     "slippage": {
       "title": "SLIPPAGE EXPLAINED",
       "content": "📊 **SLIPPAGE:**\n\nSlippage is the difference between expected price and your actual fill.\n\n**TYPICAL SETTINGS:**\n• 10–15% for normal coins\n• 20–30% for fast movers\n• Too low = fails\n• Too high = bad fills\n\n**TIP:** Start at 15% and adjust if it keeps failing.",
       "images": [],
-      "actions": ["Settings", "Risk rules", "Liquidity", "Volume check"]
+      "actions": ["settings", "risk", "liquidity", "volume"]
     },
 
     "stoploss": {
       "title": "STOP LOSS (BASIC)",
       "content": "🧯 **STOP LOSS:**\n\nA stop loss is your line in the sand so one coin doesn’t nuke your portfolio.\n\n**BEGINNER RULES:**\n• Don’t let it go past -15%\n• If you’re up 30–50%, move your stop above entry\n\nSurvive first. Then stack wins.",
       "images": [],
-      "actions": ["Trailing stop", "Risk management", "Take profits"]
+      "actions": ["trailing_stop", "risk", "take_profits"]
     },
 
     "trailing_stop": {
       "title": "TRAILING STOP LOSS (LET WINNERS RUN)",
       "content": "📈 **TRAILING STOP:**\n\nA trailing stop moves up with price so you lock profit while giving the coin room to run.\n\n**SIMPLE SETUP:**\n• Once up 30–50%: trail 3–10% above entry\n• If it’s super volatile: widen a bit so you don’t get wicked out\n\nGoal: capture the move without marrying the coin.",
       "images": [],
-      "actions": ["Stop loss", "Risk management", "Take profits"]
+      "actions": ["stoploss", "risk", "take_profits"]
     },
 
     "take_profits": {
       "title": "TAKE PROFITS (SCALE OUT LIKE A PRO)",
       "content": "💰 **TAKE PROFITS = GET PAID**\n\n**DEFAULT PLAN:**\n• At 2x: sell 50%\n• Every +30% after: sell 20%\n• Big green candles: sell 20%\n\nMeme coins reverse fast. If you don’t take profit, you become exit liquidity.",
       "images": [],
-      "actions": ["Risk management", "Stop loss", "Trailing stop"]
+      "actions": ["risk", "stoploss", "trailing_stop"]
     },
 
     "filters": {
       "title": "AXIOM FILTER SETTINGS",
       "content": "📊 **NEW PAIRS FILTERS:**\n• Protocol: Pump.fun only\n• Dev holding: 5% max\n• Bundles: 40% max\n• Pro traders: 15%\n• MC: 5k min\n• Volume: 10k min\n\n🎯 **FINAL STRETCH:**\n• Volume: 30k\n• MC: 20k\n• Top 10 holders: 40%\n• 200+ buys on 5min chart\n\nThese filters are designed to keep you safer.",
       "images": [],
-      "actions": ["Rug signs", "Good coins", "Risk rules"]
+      "actions": ["rugpull", "goodcoin", "risk"]
     },
 
     "workflow": {
       "title": "APE → SCAN → WATCH WORKFLOW",
       "content": "🎯 **TRADING STAGES:**\n\n**APE** (Caller already bought)\n• Entry taken\n• Now monitoring\n\n**SCAN** (Analyzing)\n• Not bought yet\n• Checking wallets, bubble map, chart\n\n**WATCH** (Waiting)\n• Coin looks solid\n• Waiting for a dip / entry trigger",
       "images": [],
-      "actions": ["Good coins", "Risk rules", "Entry tips"]
+      "actions": ["goodcoin", "risk", "volume"]
     },
 
     "test_sell": {
       "title": "TEST SELL (THE FASTEST RUG CHECK)",
       "content": "🧪 **TEST SELL:**\n\nBefore you size up, do a tiny sell to confirm exits work.\n\n**WHY IT’S POWERFUL:**\n• Some rugs let you buy but won’t let you sell\n• Thin liquidity shows up instantly through terrible fills\n\nIf it’s laggy, weird, or repeatedly fails: treat it as high risk.",
       "images": [],
-      "actions": ["Liquidity", "LP lock", "Rug detection", "Risk rules"]
+      "actions": ["liquidity", "lp_lock", "rugpull", "risk"]
     },
 
     "ca": {
       "title": "WHAT IS CA?",
       "content": "📍 **CA = CONTRACT ADDRESS**\n\nThe unique identifier for a token.\n\n**HOW TO USE IT:**\n1) Copy the CA\n2) Paste into Axiom/DEX\n3) You’ll pull up the exact coin\n\nUse CA to avoid fake copies.",
       "images": [],
-      "actions": ["Rug detection", "Good coins", "Workflow"]
+      "actions": ["rugpull", "goodcoin", "workflow"]
     },
 
     "settings": {
       "title": "BUY/SELL SETTINGS",
       "content": "⚙️ **TRADING SETTINGS:**\n\n**SLIPPAGE:** 10–30% (typical 15%)\n\n**FEES:** Always keep extra SOL for fees (selling can fail if you don’t).\n\n**BUY:**\n• Set your max entry size\n• Use limits when possible\n\n**SELL:**\n• Set a stop loss\n• Take profits on the way up\n• Scale out instead of full sending",
       "images": [],
-      "actions": ["Slippage explained", "Risk rules", "Filters", "Stop loss"]
+      "actions": ["slippage", "risk", "filters", "stoploss"]
     },
 
     "bundles": {
       "title": "BUNDLED WALLETS",
       "content": "⚠️ **BUNDLES = ONE PERSON USING MANY WALLETS**\n\n**HOW TO SPOT IT:**\n• Wallets are the same age\n• Wallets hold the same SOL amounts\n• Bubble map looks like a giant cluster (“death star”)\n• You see bundled trade markers\n\nBundled coins are often rug setups. Size down or skip.",
       "images": [],
-      "actions": ["Rug detection", "Good coins", "Filters"]
+      "actions": ["rugpull", "goodcoin", "filters"]
     },
 
     "bubblemap": {
       "title": "BUBBLE MAP (WHALES VS CLUSTERS)",
       "content": "🫧 **BUBBLE MAP:**\n\n✅ Good look:\n• Dispersed holders\n• No giant connected cluster\n\n🚨 Bad look:\n• One massive connected cluster = one group controlling supply\n\nRule: If it looks like a death star, treat it like a rug setup.",
       "images": [],
-      "actions": ["Bundled wallets", "Rug detection", "Good coins"]
+      "actions": ["bundles", "rugpull", "goodcoin"]
     },
 
     "volume": {
       "title": "VOLUME ANALYSIS",
       "content": "📊 **VOLUME MATTERS:**\n\nWhat to look for:\n• 200+ buys on the 5-min chart = strong\n• Volume matching MC = real interest\n• No volume = no attention\n\nOn Padre: use volume indicators for confirmation.\nOn Axiom: use volume filters to find active coins.",
       "images": [],
-      "actions": ["Good coins", "Filters", "Entry tips"]
+      "actions": ["goodcoin", "filters", "workflow"]
     },
 
     "referrals": {
       "title": "PLATFORM REFERRAL LINKS",
       "content": "🔗 **TRADER U PLATFORM LINKS:**\n\n**AXIOM (Main):** Best for beginners, clean UI, mobile friendly\n**NOVA (Advanced):** Fee cashback; better for experienced traders\n**PADRE (Terminal):** Advanced terminal; faster execution\n\nIf you tell me what platform you’re using, I’ll guide you through setup.",
       "images": [],
-      "actions": ["Filters", "Risk rules", "Good coins"]
+      "actions": ["filters", "risk", "goodcoin"]
     }
   },
 
