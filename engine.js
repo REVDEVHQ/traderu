@@ -1,12 +1,10 @@
-// engine.js - Trader U Degen Engine (UPDATED)
-// Fixes:
-// 1) clean newline rendering (no "\n\n" showing literally)
-// 2) uses knowledge.menu.content if present (with menu cooldown)
-// 3) robust mediaLibrary lookup (supports top-level mediaLibrary OR knowledge.mediaLibrary)
-// 4) safer intent detection ordering (avoid "alerts" forcing TRACKED_WALLETS too easily)
-// 5) better alert parsing (supports multi-word names + "alerts on/off <name>")
-// 6) loads tracked wallets from localStorage if present (optional)
-// 7) small grammar polish for identity fallback
+// engine.js - Trader U Degen Engine
+// UPDATED:
+// - Direct knowledge key routing (typing "test_sell" always works)
+// - "help/commands" returns a command list
+// - Safer matching + button label fallback (if label matches a key)
+// - Keeps: intents/synonyms, identity FAQ, menu variants + cooldown,
+//          tracked wallets w/ alert toggles, mediaLibrary support, bilingual light support
 
 function normalize(text) {
   return (text || "")
@@ -14,11 +12,6 @@ function normalize(text) {
     .trim()
     .toLowerCase()
     .replace(/\s+/g, " ");
-}
-
-function renderText(text) {
-  // Converts double-escaped newlines from JSON ("\\n") into real newlines ("\n")
-  return (text || "").toString().replace(/\\n/g, "\n").trim();
 }
 
 function isQuestion(text) {
@@ -35,15 +28,12 @@ function containsGreeting(text, config) {
   return containsAny(text, config.greetingKeywords || []);
 }
 
-/**
- * Intent dictionary (expand over time).
- * Keep phrases short; normalize() handles whitespace.
- *
- * NOTE: Removed "alerts"/"alert" from TRACKED_WALLETS intent list to avoid
- * false triggers. Alerts are handled by a dedicated command parser.
- */
+// -------------------- INTENTS --------------------
+
 const INTENTS = {
   MENU: ["menu", "options", "help menu", "start over", "show options"],
+
+  HELP: ["help", "commands", "available commands", "command list", "list commands"],
 
   IDENTITY: [
     "who is chepe",
@@ -116,6 +106,8 @@ const INTENTS = {
     "track wallets",
     "tracked",
     "wallets",
+    "alerts",
+    "alert",
     "follow wallet"
   ]
 };
@@ -124,6 +116,7 @@ function detectIntent(userMessage) {
   const msg = normalize(userMessage);
 
   if (containsAny(msg, INTENTS.MENU)) return "MENU";
+  if (containsAny(msg, INTENTS.HELP)) return "HELP";
 
   if (
     containsAny(msg, INTENTS.IDENTITY) ||
@@ -144,6 +137,8 @@ function detectIntent(userMessage) {
 
   return "FALLBACK";
 }
+
+// -------------------- RESPONSE GATING --------------------
 
 function shouldRespond(userMessage, state, config) {
   if (!config.speakOnlyAfterGreeting) return true;
@@ -168,22 +163,11 @@ function nextState(userMessage, state, config) {
   };
 }
 
-// -------------------- MEDIA LIBRARY (SCREENSHOTS) --------------------
+// -------------------- MEDIA LIBRARY --------------------
 
 function getMediaItems(knowledgeBase) {
-  // Support both:
-  // - top-level: { mediaLibrary: { items: [...] } }
-  // - nested: { knowledge: { mediaLibrary: { items: [...] } } }
-  const lib =
-    knowledgeBase.mediaLibrary ||
-    knowledgeBase.knowledge?.mediaLibrary ||
-    {};
-
-  const items =
-    lib.items ||
-    knowledgeBase.mediaLibraryItems ||
-    [];
-
+  const lib = knowledgeBase.mediaLibrary || {};
+  const items = lib.items || knowledgeBase.mediaLibraryItems || knowledgeBase.mediaLibrary || [];
   return Array.isArray(items) ? items : [];
 }
 
@@ -194,18 +178,16 @@ function scoreMediaItem(item, msg, intent) {
   const intentBoost = {
     SETTINGS: ["stoploss", "stop loss", "trailing", "tp", "slippage", "settings"],
     VOLUME: ["volume", "buys", "txns"],
-    RUG: ["rug", "bundles", "bubble", "death star", "can't sell", "cant sell"],
+    RUG: ["rug", "bundles", "bubble", "death star", "can't sell", "cant sell", "test sell"],
     WORKFLOW: ["ape", "scan", "watch"],
     FILTERS: ["axiom", "filters", "pulse"],
-    LIQUIDITY: ["lp", "liquidity", "lock", "lp lock"]
+    LIQUIDITY: ["lp lock", "locked", "liquidity"]
   };
 
   const tags = Array.isArray(item.tags) ? item.tags.map(normalize) : [];
   const useWhen = Array.isArray(item.useWhen) ? item.useWhen.map(normalize) : [];
 
-  tags.forEach((t) => {
-    if (t && text.includes(t)) score += 3;
-  });
+  tags.forEach((t) => { if (t && text.includes(t)) score += 3; });
 
   useWhen.forEach((u) => {
     const cleaned = u.replace(/[^\w\s-]/g, " ");
@@ -214,10 +196,7 @@ function scoreMediaItem(item, msg, intent) {
     score += Math.min(4, hits);
   });
 
-  const boostWords = intentBoost[intent] || [];
-  boostWords.forEach((w) => {
-    if (text.includes(normalize(w))) score += 2;
-  });
+  (intentBoost[intent] || []).forEach((w) => { if (text.includes(normalize(w))) score += 2; });
 
   if (text.includes("padre") && tags.includes("padre")) score += 3;
   if (text.includes("axiom") && tags.includes("axiom")) score += 3;
@@ -239,47 +218,20 @@ function pickRelevantMedia(knowledgeBase, msg, intent, limit = 2) {
 
 function formatMediaBlock(items) {
   if (!items || items.length === 0) return "";
-
   const lines = items.map((it) => {
     const title = it.title ? String(it.title).trim() : it.id || "Reference";
     return `• ${title}: ${it.url}`;
   });
-
   return `\n\nReference images:\n${lines.join("\n")}`;
 }
 
+function appendMediaIfHelpful(baseText, knowledgeBase, userMessage, intent) {
+  const picks = pickRelevantMedia(knowledgeBase, userMessage, intent, 2);
+  const mediaBlock = formatMediaBlock(picks);
+  return baseText + mediaBlock;
+}
+
 // -------------------- WALLET TRACKING --------------------
-
-function loadPersistedTrackedWallets() {
-  try {
-    const raw = localStorage.getItem("trackedWallets");
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : null;
-  } catch (e) {
-    return null;
-  }
-}
-
-function getTrackedWallets(knowledgeBase) {
-  // Prefer localStorage if present (optional)
-  const persisted = loadPersistedTrackedWallets();
-  if (persisted && persisted.length) return persisted;
-
-  const wallets =
-    knowledgeBase.trackedWallets ||
-    knowledgeBase.walletTracking ||
-    knowledgeBase.knowledge?.trackedWallets?.wallets ||
-    [];
-
-  return Array.isArray(wallets) ? wallets : [];
-}
-
-function persistTrackedWallets(wallets) {
-  try {
-    localStorage.setItem("trackedWallets", JSON.stringify(wallets));
-  } catch (e) {}
-}
 
 function formatWalletLine(w, i) {
   const emoji = w.emoji || "👀";
@@ -288,12 +240,22 @@ function formatWalletLine(w, i) {
   return `• ${emoji} ${name} — ${w.trackedWalletAddress} (${status})`;
 }
 
+function getTrackedWallets(knowledgeBase) {
+  const wallets =
+    knowledgeBase.trackedWallets ||
+    knowledgeBase.walletTracking ||
+    knowledgeBase.knowledge?.trackedWallets?.wallets ||
+    [];
+  return Array.isArray(wallets) ? wallets : [];
+}
+
+function persistTrackedWallets(wallets) {
+  try { localStorage.setItem("trackedWallets", JSON.stringify(wallets)); } catch (e) {}
+}
+
 function listTrackedWallets(knowledgeBase) {
   const wallets = getTrackedWallets(knowledgeBase);
-
-  if (wallets.length === 0) {
-    return "No tracked wallets yet. Add them to content.json under `trackedWallets`.";
-  }
+  if (wallets.length === 0) return "No tracked wallets yet. Add them to content.json under `trackedWallets`.";
 
   const lines = wallets.map(formatWalletLine);
   return (
@@ -305,60 +267,24 @@ function listTrackedWallets(knowledgeBase) {
   );
 }
 
-function parseAlertsCommand(rawMsg) {
-  // Supports:
-  // - "alerts cupsey off"
-  // - "alerts orangie on"
-  // - "alerts on cupsey"
-  // - "alerts off cchesta"
-  // - multi-word names: "alerts big whale off"
-  const msg = normalize(rawMsg);
-  if (!msg.startsWith("alerts ")) return null;
+function toggleWalletAlerts(msg, knowledgeBase) {
+  const parts = normalize(msg).split(" ").filter(Boolean);
+  const target = (parts[1] || "").trim();
+  const stateWord = (parts[2] || "").trim();
 
-  const parts = msg.split(" ").filter(Boolean); // ["alerts", ...]
-  if (parts.length < 3) return { error: true };
-
-  const second = parts[1];
-  const third = parts[2];
-
-  // Pattern A: alerts <name> on/off
-  if (third === "on" || third === "off") {
-    return { name: parts.slice(1, -1).join(" "), stateWord: third };
+  if (!target || !["on", "off"].includes(stateWord)) {
+    return "Use: **alerts <name> on** or **alerts <name> off** (example: alerts cupsey off).";
   }
-
-  // Pattern B: alerts on/off <name>
-  if (second === "on" || second === "off") {
-    return { name: parts.slice(2).join(" "), stateWord: second };
-  }
-
-  return { error: true };
-}
-
-function toggleWalletAlerts(rawMsg, knowledgeBase) {
-  const parsed = parseAlertsCommand(rawMsg);
-
-  if (!parsed || parsed.error || !parsed.name || !["on", "off"].includes(parsed.stateWord)) {
-    return "Use: **alerts <name> on/off** (example: alerts cupsey off).";
-  }
-
-  const target = parsed.name;
-  const stateWord = parsed.stateWord;
 
   const wallets = getTrackedWallets(knowledgeBase);
-  if (wallets.length === 0) {
-    return "No tracked wallets found. Add them to content.json under `trackedWallets` first.";
-  }
+  if (wallets.length === 0) return "No tracked wallets found. Add them to content.json under `trackedWallets` first.";
 
-  // Case-insensitive match
   const idx = wallets.findIndex((w) => normalize(w.name || "") === normalize(target));
-  if (idx === -1) {
-    return `Couldn't find a tracked wallet named **${target}**. Type **tracked wallets** to see names.`;
-  }
+  if (idx === -1) return `Couldn't find a tracked wallet named **${target}**. Type **tracked wallets** to see names.`;
 
   wallets[idx].alertsOn = (stateWord === "on");
   persistTrackedWallets(wallets);
 
-  // Write back to knowledgeBase so the UI reflects immediately
   if (Array.isArray(knowledgeBase.trackedWallets)) knowledgeBase.trackedWallets = wallets;
   if (Array.isArray(knowledgeBase.walletTracking)) knowledgeBase.walletTracking = wallets;
 
@@ -371,11 +297,7 @@ function pickOne(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function getMenuText(knowledgeBase) {
-  // Prefer knowledge.menu.content (and render escaped newlines)
-  const kbMenu = knowledgeBase.knowledge?.menu?.content;
-  if (kbMenu) return renderText(kbMenu);
-
+function getMenuText() {
   const variants = [
     "What do you need help with?\n\n1) Axiom filters\n2) Rug vs good coins\n3) Settings (TP/SL/slippage)\n4) Tracked wallets\n\nReply with a number or ask a question.",
     "Pick one:\n\n1) Set up Axiom filters\n2) Rug detection + good coin checklist\n3) Buy/sell settings + stop loss\n4) Tracked wallets\n\nReply with a number or ask a question.",
@@ -384,23 +306,55 @@ function getMenuText(knowledgeBase) {
   return pickOne(variants);
 }
 
+// -------------------- KNOWLEDGE HELPERS --------------------
+
+function getKnowledgeKeys(knowledgeBase) {
+  const kb = knowledgeBase.knowledge || {};
+  return Object.keys(kb || {});
+}
+
+function buildCommandsList(knowledgeBase) {
+  const kb = knowledgeBase.knowledge || {};
+  const keys = getKnowledgeKeys(knowledgeBase);
+  if (!keys.length) return "No knowledge docs loaded yet.";
+
+  const lines = keys.map((k) => {
+    const title = kb[k]?.title ? ` — ${kb[k].title}` : "";
+    return `• ${k}${title}`;
+  });
+
+  return `AVAILABLE COMMANDS:\n\n${lines.join("\n")}\n\nTip: type any command exactly (example: test_sell)`;
+}
+
+function directKeyResponse(knowledgeBase, msg) {
+  const kb = knowledgeBase.knowledge || {};
+  const key = normalize(msg);
+
+  // Exact match on key
+  if (kb[key]) return kb[key].content || kb[key].title || `No content found for "${key}".`;
+
+  // If user typed with spaces but key uses underscores (e.g. "test sell" -> "test_sell")
+  const underscore = key.replace(/\s+/g, "_");
+  if (kb[underscore]) return kb[underscore].content || kb[underscore].title || `No content found for "${underscore}".`;
+
+  // If user typed underscores but key uses spaces (rare)
+  const spaced = key.replace(/_/g, " ");
+  if (kb[spaced]) return kb[spaced].content || kb[spaced].title || `No content found for "${spaced}".`;
+
+  return null;
+}
+
 // -------------------- RESPONSES --------------------
 
 function getIdentityResponse(knowledgeBase) {
   const kb = knowledgeBase.knowledge || {};
-  if (kb.identity?.content) return renderText(kb.identity.content);
+  if (kb.identity?.content) return kb.identity.content;
 
   return (
-    "Trader U is a meme-coin trading community focused on execution, safety checks, and risk management.\n\n" +
-    "Chepe (ChepeTrades / chepeex_) is the creator behind the content and systems.\n\n" +
-    "Tell me what platform you’re on (Axiom / Nova / Padre / Phantom) and what you’re trying to do, and I’ll give you step-by-step instructions."
+    "Trader U is a meme-coin trading community focused on execution, rug detection, and risk rules.\n\n" +
+    "Chepe is the creator behind the Trader U content.\n\n" +
+    "If you tell me what platform you're on (Axiom / Nova / Padre / Phantom), I’ll give the exact steps."
   );
-}
-
-function appendMediaIfHelpful(baseText, knowledgeBase, userMessage, intent) {
-  const picks = pickRelevantMedia(knowledgeBase, userMessage, intent, 2);
-  const mediaBlock = formatMediaBlock(picks);
-  return renderText(baseText) + mediaBlock;
 }
 
 function getResponse(userMessage, state, knowledgeBase) {
@@ -408,19 +362,27 @@ function getResponse(userMessage, state, knowledgeBase) {
   const config = knowledgeBase.engineConfig || knowledgeBase.meta?.policy || {};
   const intent = detectIntent(msg);
 
-  // Show menu only when:
-  // - user explicitly asks for menu OR
-  // - they greet and cooldown is 0
+  // 1) ALWAYS allow direct doc key responses (this is the main fix)
+  // Works for: test_sell, bubblemap, lp_lock, trailing_stop, take_profits, etc.
+  const direct = directKeyResponse(knowledgeBase, userMessage);
+  if (direct) {
+    // Intent is effectively "DOC"
+    return appendMediaIfHelpful(direct, knowledgeBase, userMessage, "DOC");
+  }
+
+  // 2) Menu display logic
   const greetedNow = containsGreeting(userMessage, config);
   if ((intent === "MENU" || (greetedNow && state.menuCooldown === 0)) && state.greeted) {
     state.menuCooldown = 3;
-    return getMenuText(knowledgeBase);
+    return getMenuText();
   }
 
-  // Alerts command (handled before intents so it never conflicts)
-  if (msg.startsWith("alerts ")) return toggleWalletAlerts(userMessage, knowledgeBase);
+  // 3) Help/commands
+  if (intent === "HELP") {
+    return buildCommandsList(knowledgeBase);
+  }
 
-  // Number shortcuts
+  // 4) Number shortcuts
   if (msg === "1") {
     const text = knowledgeBase.knowledge?.filters?.content || "Go Pulse tab → Filters → Import → paste JSON → Apply All.";
     return appendMediaIfHelpful(text, knowledgeBase, userMessage, "FILTERS");
@@ -435,31 +397,32 @@ function getResponse(userMessage, state, knowledgeBase) {
   }
   if (msg === "4") return listTrackedWallets(knowledgeBase);
 
-  // Intent routing
+  // 5) Wallet alerts command
+  if (msg.startsWith("alerts ")) return toggleWalletAlerts(msg, knowledgeBase);
+
+  // 6) Intent routing
   let text = "";
   if (intent === "IDENTITY") text = getIdentityResponse(knowledgeBase);
   else if (intent === "FILTERS") text = knowledgeBase.knowledge?.filters?.content || "Go Pulse tab → Filters → Import → paste JSON → Apply All.";
   else if (intent === "SETTINGS") text = knowledgeBase.knowledge?.settings?.content || "Set stop loss in advanced strategy. Keep SOL for fees.";
   else if (intent === "RUG") text = knowledgeBase.knowledge?.rugpull?.content || "Check chart pattern, wallet dates, bubble map, liquidity.";
   else if (intent === "GOODCOIN") text = knowledgeBase.knowledge?.goodcoin?.content || "Look for healthy chart, volume, dispersed wallets.";
-  else if (intent === "RISK") text = knowledgeBase.knowledge?.risk?.content || "Risk 1–5% per trade. Set a stop loss. Take profits at 2x.";
-  else if (intent === "LIQUIDITY") text = knowledgeBase.knowledge?.liquidity?.content || "LP lock reduces rug risk but doesn’t prevent dumps.";
+  else if (intent === "RISK") text = knowledgeBase.knowledge?.risk?.content || "Risk 1-5% per trade. Set stop loss. Take profits at 2x.";
+  else if (intent === "LIQUIDITY") text = knowledgeBase.knowledge?.liquidity?.content || "LP lock reduces rug risk but doesn't prevent dumps.";
   else if (intent === "LINKS") text = knowledgeBase.knowledge?.referrals?.content || "Check platform links for Axiom, Nova, Padre.";
-  else if (intent === "VOLUME") text = knowledgeBase.knowledge?.volume?.content || "Look for 200+ buys on the 5-min chart. Volume = truth.";
-  else if (intent === "CA") text = knowledgeBase.knowledge?.ca?.content || "CA = Contract Address. Copy it and paste into Axiom to find the exact coin.";
+  else if (intent === "VOLUME") text = knowledgeBase.knowledge?.volume?.content || "Look for 200+ buys on 5min chart. Volume = truth.";
+  else if (intent === "CA") text = knowledgeBase.knowledge?.ca?.content || "CA = Contract Address. Copy and paste into Axiom to find exact coin.";
   else if (intent === "WORKFLOW") text = knowledgeBase.knowledge?.workflow?.content || "APE = bought in. SCAN = analyzing. WATCH = waiting for dip.";
   else if (intent === "TRACKED_WALLETS") return listTrackedWallets(knowledgeBase);
 
-  if (text) {
-    return appendMediaIfHelpful(text, knowledgeBase, userMessage, intent);
-  }
+  if (text) return appendMediaIfHelpful(text, knowledgeBase, userMessage, intent);
 
-  // Helpful fallback (avoid sounding dumb / repetitive)
+  // 7) Helpful fallback
   if (containsAny(msg, ["fuck you", "stfu", "dumb", "trash"])) {
-    return "If you want trading help, tell me what app you’re on (Axiom / Padre / Phantom) and what you’re trying to do (filters, rug check, entry, settings).";
+    return "If you want trading help: tell me what app you're on (Axiom / Padre / Phantom) and what you're trying to do (filters, rug check, entry, settings).";
   }
 
-  return "Tell me what screen you’re on (Axiom / Padre / Phantom) and what you’re trying to do (buy, sell, filters, or checking a coin).";
+  return "Tell me what screen you're on (Axiom / Padre / Phantom) and what you're trying to do (buy, sell, filters, or checking a coin).";
 }
 
 export function createEngine(knowledgeBase) {
